@@ -97,17 +97,15 @@ $ kubectl create -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/mo
 mongodb.kubedb.com/mgo-misc-config created
 ```
 
-Now, wait a few minutes. KubeDB operator will create necessary PVC, statefulset, services, secret etc. If everything goes well, we will see that a pod with the name `mgo-misc-config-0` has been created.
-
-Check that the statefulset's pod is running
+Now, wait a few minutes. KubeDB operator will create necessary PVC, statefulset, services, secret etc. Wait for mongodb database's status to become `Running`.
 
 ```console
-$ kubectl get pod -n demo
-NAME                READY     STATUS    RESTARTS   AGE
-mgo-misc-config-0   1/1       Running   0          14m
+$ kubectl get mongodb -n demo
+NAME              VERSION   STATUS    AGE
+mgo-misc-config   4.1       Running   2m
 ```
 
-Now, check if the database has started with the custom configuration we have provided.
+Check if the database has started with the custom configuration we have provided.
 
 Now, you can connect to this database through [mongo-shell](https://docs.mongodb.com/v3.4/mongo/). In this tutorial, we are connecting to the MongoDB server from inside the pod.
 
@@ -116,14 +114,11 @@ $ kubectl get secrets -n demo mgo-misc-config-auth -o jsonpath='{.data.\username
 root
 
 $ kubectl get secrets -n demo mgo-misc-config-auth -o jsonpath='{.data.\password}' | base64 -d
-zyp5hDfRlVOWOyk9
+D0JsfZpUORK_j9E3
 
-$ kubectl exec -it mgo-misc-config-0 -n demo sh
+$ kubectl exec -it mgo-misc-config-0 -n demo bash
 
-> mongo admin
-
-> db.auth("root","zyp5hDfRlVOWOyk9")
-1
+root@mgo-misc-config-0:/# mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD
 
 > db._adminCommand( {getCmdLineOpts: 1})
 {
@@ -133,13 +128,17 @@ $ kubectl exec -it mgo-misc-config-0 -n demo sh
 		"--auth",
 		"--bind_ip=0.0.0.0",
 		"--port=27017",
+		"--sslMode=disabled",
 		"--maxConns=100"
 	],
 	"parsed" : {
 		"net" : {
 			"bindIp" : "0.0.0.0",
 			"maxIncomingConnections" : 100,
-			"port" : 27017
+			"port" : 27017,
+			"tls" : {
+				"mode" : "disabled"
+			}
 		},
 		"security" : {
 			"authorization" : "enabled"
@@ -157,79 +156,6 @@ bye
 
 You can see the maximum connection is set to `100` in `parsed.net.maxIncomingConnections`.
 
-## Snapshot Configuration
-
-`Snapshot` also has the scope to be configured through `spec.podTemplate`. In this tutorial, an extra argument `--gzip` is passed to snapshot crd so that the output of `mongodump` is saved in `gzip`.
-
-Below is the Snapshot CRD that is deployed in this tutorial. Create a secret `mg-snap-secret` from [here](/docs/guides/mongodb/snapshot/backup-and-restore.md#instant-backups) for snapshot. 
-
-```yaml
-apiVersion: kubedb.com/v1alpha1
-kind: Snapshot
-metadata:
-  name: snap-mgo-config
-  namespace: demo
-  labels:
-    kubedb.com/kind: MongoDB
-spec:
-  databaseName: mgo-misc-config
-  storageSecretName: mg-snap-secret
-  gcs:
-    bucket: kubedb-qa
-  podTemplate:
-    spec:
-      args:
-      - --gzip
-```
-
-```console
-$ kubectl create -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/mongodb/configuration/snapshot-misc-conf.yaml
-snapshot.kubedb.com/snap-mongodb-config created
-
-
-$ kubedb get snap -n demo
-NAME              DATABASENAME      STATUS      AGE
-snap-mgo-config   mgo-misc-config   Succeeded   50m
-```
-
-## Scheduled Backups
-
-To configure BackupScheduler, add the require changes in PodTemplate just like snapshot object.
-
-```yaml
-$ kubedb edit mg mgo-misc-config -n demo
-apiVersion: kubedb.com/v1alpha1
-kind: MongoDB
-metadata:
-  name: mgo-misc-config
-  namespace: demo
-  ...
-spec:
-  backupSchedule:
-    cronExpression: '@every 1m'
-    storageSecretName: mg-snap-secret
-    gcs:
-      bucket: kubedb-qa
-    podTemplate:
-      spec:
-        args:
-        - --gzip
-  ...
-status:
-  observedGeneration: 3$4212299729528774793
-  phase: Running
-```
-
-```console
-$ kubedb get snap -n demo
-NAME                              DATABASENAME      STATUS      AGE
-mgo-misc-config-20181002-105247   mgo-misc-config   Succeeded   3m
-mgo-misc-config-20181002-105349   mgo-misc-config   Succeeded   2m
-mgo-misc-config-20181002-105449   mgo-misc-config   Succeeded   1m
-mgo-misc-config-20181002-105549   mgo-misc-config   Succeeded   43s
-snap-mongodb-config               mgo-misc-config   Succeeded   12m
-```
-
 ## Cleaning up
 
 To cleanup the Kubernetes resources created by this tutorial, run:
@@ -237,9 +163,6 @@ To cleanup the Kubernetes resources created by this tutorial, run:
 ```console
 kubectl patch -n demo mg/mgo-misc-config -p '{"spec":{"terminationPolicy":"WipeOut"}}' --type="merge"
 kubectl delete -n demo mg/mgo-misc-config
-
-kubectl patch -n demo drmn/mgo-misc-config -p '{"spec":{"wipeOut":true}}' --type="merge"
-kubectl delete -n demo drmn/mgo-misc-config
 
 kubectl delete ns demo
 ```
@@ -249,14 +172,10 @@ If you would like to uninstall KubeDB operator, please follow the steps [here](/
 ## Next Steps
 
 - [Quickstart MongoDB](/docs/guides/mongodb/quickstart/quickstart.md) with KubeDB Operator.
-- [Snapshot and Restore](/docs/guides/mongodb/snapshot/backup-and-restore.md) process of MongoDB databases using KubeDB.
-- Take [Scheduled Snapshot](/docs/guides/mongodb/snapshot/scheduled-backup.md) of MongoDB databases using KubeDB.
 - Initialize [MongoDB with Script](/docs/guides/mongodb/initialization/using-script.md).
-- Initialize [MongoDB with Snapshot](/docs/guides/mongodb/initialization/using-snapshot.md).
 - Monitor your MongoDB database with KubeDB using [out-of-the-box CoreOS Prometheus Operator](/docs/guides/mongodb/monitoring/using-coreos-prometheus-operator.md).
 - Monitor your MongoDB database with KubeDB using [out-of-the-box builtin-Prometheus](/docs/guides/mongodb/monitoring/using-builtin-prometheus.md).
 - Use [private Docker registry](/docs/guides/mongodb/private-registry/using-private-registry.md) to deploy MongoDB with KubeDB.
 - Use [kubedb cli](/docs/guides/mongodb/cli/cli.md) to manage databases like kubectl for Kubernetes.
 - Detail concepts of [MongoDB object](/docs/concepts/databases/mongodb.md).
-- Detail concepts of [Snapshot object](/docs/concepts/snapshot.md).
 - Want to hack on KubeDB? Check our [contribution guidelines](/docs/CONTRIBUTING.md).

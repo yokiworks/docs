@@ -58,7 +58,7 @@ metadata:
   name: mgo-tls
   namespace: demo
 spec:
-  version: "3.6-v4"
+  version: "4.1"
   sslMode: requireSSL
   storage:
     storageClassName: "standard"
@@ -72,7 +72,7 @@ spec:
 ### Deploy MongoDB Standalone
 
 ```console
-$ kubectl create -f ./docs/examples/mongodb/tls-ssl-encryption/tls-standalone.yaml
+$ kubectl create -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/mongodb/tls-ssl-encryption/tls-standalone.yaml
 mongodb.kubedb.com/mgo-tls created
 ```
 
@@ -81,7 +81,7 @@ Now, wait until `mgo-tls created` has status `Running`. i.e,
 ```console
 $ kubectl get mg -n demo
 NAME      VERSION   STATUS    AGE
-mgo-tls   3.6-v4    Running   20s
+mgo-tls   4.1    Running   20s
 ```
 
 ### Verify TLS/SSL in MongoDB Standalone
@@ -96,7 +96,7 @@ Labels:       app.kubernetes.io/component=database
               app.kubernetes.io/instance=mgo-tls
               app.kubernetes.io/managed-by=kubedb.com
               app.kubernetes.io/name=mongodb
-              app.kubernetes.io/version=3.6-v4
+              app.kubernetes.io/version=4.1
               kubedb.com/kind=MongoDB
               kubedb.com/name=mgo-tls
 Annotations:  <none>
@@ -170,7 +170,7 @@ metadata:
   name: mgo-rs-tls
   namespace: demo
 spec:
-  version: "3.6-v4"
+  version: "4.1"
   sslMode: requireSSL
   clusterAuthMode: x509
   replicas: 4
@@ -188,7 +188,7 @@ spec:
 ### Deploy MongoDB Replicaset
 
 ```console
-$ kubectl create -f ./docs/examples/mongodb/tls-ssl-encryption/tls-replicaset.yaml
+$ kubectl create -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/mongodb/tls-ssl-encryption/tls-replicaset.yaml
 mongodb.kubedb.com/mgo-rs-tls created
 ```
 
@@ -197,7 +197,7 @@ Now, wait until `mgo-rs-tls created` has status `Running`. i.e,
 ```console
 $ kubectl get mg -n demo
 NAME         VERSION   STATUS    AGE
-mgo-rs-tls   3.6-v4    Running   2m31s
+mgo-rs-tls   4.1    Running   2m31s
 ```
 
 ### Verify TLS/SSL in MongoDB Replicaset
@@ -212,7 +212,7 @@ Labels:       app.kubernetes.io/component=database
               app.kubernetes.io/instance=mgo-rs-tls
               app.kubernetes.io/managed-by=kubedb.com
               app.kubernetes.io/name=mongodb
-              app.kubernetes.io/version=3.6-v4
+              app.kubernetes.io/version=4.1
               kubedb.com/kind=MongoDB
               kubedb.com/name=mgo-rs-tls
 Annotations:  <none>
@@ -310,7 +310,7 @@ metadata:
   name: mongo-sh-tls
   namespace: demo
 spec:
-  version: "3.6-v4"
+  version: "4.1"
   sslMode: requireSSL
   clusterAuthMode: x509
   shardTopology:
@@ -342,7 +342,7 @@ spec:
 ### Deploy MongoDB Sharding
 
 ```console
-$ kubectl create -f ./docs/examples/mongodb/tls-ssl-encryption/tls-sharding.yaml
+$ kubectl create -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/mongodb/tls-ssl-encryption/tls-sharding.yaml
 mongodb.kubedb.com/mongo-sh-tls created
 ```
 
@@ -351,7 +351,7 @@ Now, wait until `mongo-sh-tls created` has status `Running`. ie,
 ```console
 $ kubectl get mg -n demo
 NAME           VERSION   STATUS    AGE
-mongo-sh-tls   3.6-v4    Running   9m34s
+mongo-sh-tls   4.1    Running   9m34s
 ```
 
 ### Verify TLS/SSL in MongoDB Sharding
@@ -366,7 +366,7 @@ Labels:       app.kubernetes.io/component=database
               app.kubernetes.io/instance=mongo-sh-tls
               app.kubernetes.io/managed-by=kubedb.com
               app.kubernetes.io/name=mongodb
-              app.kubernetes.io/version=3.6-v4
+              app.kubernetes.io/version=4.1
               kubedb.com/kind=MongoDB
               kubedb.com/name=mongo-sh-tls
 Annotations:  <none>
@@ -487,14 +487,10 @@ kubectl delete ns demo
 ## Next Steps
 
 - Detail concepts of [MongoDB object](/docs/concepts/databases/mongodb.md).
-- [Snapshot and Restore](/docs/guides/mongodb/snapshot/backup-and-restore.md) process of MongoDB databases using KubeDB.
-- Take [Scheduled Snapshot](/docs/guides/mongodb/snapshot/scheduled-backup.md) of MongoDB databases using KubeDB.
 - Initialize [MongoDB with Script](/docs/guides/mongodb/initialization/using-script.md).
-- Initialize [MongoDB with Snapshot](/docs/guides/mongodb/initialization/using-snapshot.md).
 - Monitor your MongoDB database with KubeDB using [out-of-the-box CoreOS Prometheus Operator](/docs/guides/mongodb/monitoring/using-coreos-prometheus-operator.md).
 - Monitor your MongoDB database with KubeDB using [out-of-the-box builtin-Prometheus](/docs/guides/mongodb/monitoring/using-builtin-prometheus.md).
 - Use [private Docker registry](/docs/guides/mongodb/private-registry/using-private-registry.md) to deploy MongoDB with KubeDB.
 - Use [kubedb cli](/docs/guides/mongodb/cli/cli.md) to manage databases like kubectl for Kubernetes.
 - Detail concepts of [MongoDB object](/docs/concepts/databases/mongodb.md).
-- Detail concepts of [Snapshot object](/docs/concepts/snapshot.md).
 - Want to hack on KubeDB? Check our [contribution guidelines](/docs/CONTRIBUTING.md).

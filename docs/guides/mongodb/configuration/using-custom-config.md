@@ -71,12 +71,12 @@ data:
        maxIncomingConnections: 10000
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2019-02-06T10:03:45Z"
+  creationTimestamp: "2020-01-30T04:36:55Z"
   name: mg-custom-config
   namespace: demo
-  resourceVersion: "91905"
+  resourceVersion: "3797"
   selfLink: /api/v1/namespaces/demo/configmaps/mg-custom-config
-  uid: 7da0467c-29f6-11e9-aebf-080027875192
+  uid: 93bbf9c7-6228-410a-88ab-3882e48f32ff
 ```
 
 Now, create MongoDB crd specifying `spec.configSource` field.
@@ -107,14 +107,13 @@ $ kubectl create -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/mo
 mongodb.kubedb.com/mgo-custom-config created
 ```
 
-Now, wait a few minutes. KubeDB operator will create necessary PVC, statefulset, services, secret etc. If everything goes well, we will see that a pod with the name `mgo-custom-config-0` has been created.
-
-Check that the statefulset's pod is running
+Now, wait a few minutes. KubeDB operator will create necessary PVC, statefulset, services, secret etc. 
+Wait for mongodb database's status to become `Running`.
 
 ```console
-$ kubectl get pod -n demo mgo-custom-config-0
-NAME                  READY     STATUS    RESTARTS   AGE
-mgo-custom-config-0   1/1       Running   0          1m
+$ kubectl get mongodb -n demo
+NAME                VERSION   STATUS    AGE
+mgo-custom-config   4.1       Running   2m18s
 ```
 
 Now, we will check if the database has started with the custom configuration we have provided.
@@ -126,14 +125,11 @@ $ kubectl get secrets -n demo mgo-custom-config-auth -o jsonpath='{.data.\userna
 root
 
 $ kubectl get secrets -n demo mgo-custom-config-auth -o jsonpath='{.data.\password}' | base64 -d
-ErialNojWParBFoP
+6wQeXvP4ChgjBQc5
 
-$ kubectl exec -it mgo-custom-config-0 -n demo sh
+$ kubectl exec -it mgo-custom-config-0 -n demo bash
 
-> mongo admin
-
-> db.auth("root","ErialNojWParBFoP")
-1
+root@mgo-custom-config-0:/# mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD
 
 > db._adminCommand( {getCmdLineOpts: 1})
 {
@@ -143,6 +139,7 @@ $ kubectl exec -it mgo-custom-config-0 -n demo sh
 		"--auth",
 		"--bind_ip=0.0.0.0",
 		"--port=27017",
+		"--sslMode=disabled",
 		"--config=/data/configdb/mongod.conf"
 	],
 	"parsed" : {
@@ -150,7 +147,10 @@ $ kubectl exec -it mgo-custom-config-0 -n demo sh
 		"net" : {
 			"bindIp" : "0.0.0.0",
 			"maxIncomingConnections" : 10000,
-			"port" : 27017
+			"port" : 27017,
+			"tls" : {
+				"mode" : "disabled"
+			}
 		},
 		"security" : {
 			"authorization" : "enabled"
@@ -176,9 +176,6 @@ To cleanup the Kubernetes resources created by this tutorial, run:
 kubectl patch -n demo mg/mgo-custom-config -p '{"spec":{"terminationPolicy":"WipeOut"}}' --type="merge"
 kubectl delete -n demo mg/mgo-custom-config
 
-kubectl patch -n demo drmn/mgo-custom-config -p '{"spec":{"wipeOut":true}}' --type="merge"
-kubectl delete -n demo drmn/mgo-custom-config
-
 kubectl delete -n demo configmap mg-custom-config
 
 kubectl delete ns demo
@@ -186,15 +183,11 @@ kubectl delete ns demo
 
 ## Next Steps
 
-- [Snapshot and Restore](/docs/guides/mongodb/snapshot/backup-and-restore.md) process of MongoDB databases using KubeDB.
-- Take [Scheduled Snapshot](/docs/guides/mongodb/snapshot/scheduled-backup.md) of MongoDB databases using KubeDB.
 - Initialize [MongoDB with Script](/docs/guides/mongodb/initialization/using-script.md).
-- Initialize [MongoDB with Snapshot](/docs/guides/mongodb/initialization/using-snapshot.md).
 - Monitor your MongoDB database with KubeDB using [out-of-the-box CoreOS Prometheus Operator](/docs/guides/mongodb/monitoring/using-coreos-prometheus-operator.md).
 - Monitor your MongoDB database with KubeDB using [out-of-the-box builtin-Prometheus](/docs/guides/mongodb/monitoring/using-builtin-prometheus.md).
 - Use [private Docker registry](/docs/guides/mongodb/private-registry/using-private-registry.md) to deploy MongoDB with KubeDB.
 - Use [kubedb cli](/docs/guides/mongodb/cli/cli.md) to manage databases like kubectl for Kubernetes.
 - Detail concepts of [MongoDB object](/docs/concepts/databases/mongodb.md).
-- Detail concepts of [Snapshot object](/docs/concepts/snapshot.md).
 - Detail concepts of [MongoDBVersion object](/docs/concepts/catalog/mongodb.md).
 - Want to hack on KubeDB? Check our [contribution guidelines](/docs/CONTRIBUTING.md).

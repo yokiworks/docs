@@ -343,12 +343,9 @@ root
 $ kubectl get secrets -n demo mgo-quickstart-auth -o jsonpath='{.data.\password}' | base64 -d
 oFWDscelkRRN2YOA
 
-$ kubectl exec -it mgo-quickstart-0 -n demo sh
+$ kubectl exec -it mgo-quickstart-0 -n demo bash
 
-> mongo admin
-
-> db.auth("root","oFWDscelkRRN2YOA")
-1
+> mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD
 
 > show dbs
 admin  0.000GB
@@ -502,11 +499,8 @@ mgo-quickstart   4.1       Running   34m
 Now, if you exec into the database, you can see that the datas are intact.
 
 ```console
-$ kubectl exec -it mgo-quickstart-0 -n demo sh
+$ kubectl exec -it mgo-quickstart-0 -n demo bash
 > mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD
-
-> db.auth("root","oFWDscelkRRN2YOA")
-1
 
 > show dbs
 admin  0.000GB
@@ -573,10 +567,7 @@ If you are just testing some basic functionalities, you might want to avoid addi
 
 ## Next Steps
 
-- [Snapshot and Restore](/docs/guides/mongodb/snapshot/backup-and-restore.md) process of MongoDB databases using KubeDB.
-- Take [Scheduled Snapshot](/docs/guides/mongodb/snapshot/scheduled-backup.md) of MongoDB databases using KubeDB.
 - Initialize [MongoDB with Script](/docs/guides/mongodb/initialization/using-script.md).
-- Initialize [MongoDB with Snapshot](/docs/guides/mongodb/initialization/using-snapshot.md).
 - Monitor your MongoDB database with KubeDB using [out-of-the-box CoreOS Prometheus Operator](/docs/guides/mongodb/monitoring/using-coreos-prometheus-operator.md).
 - Monitor your MongoDB database with KubeDB using [out-of-the-box builtin-Prometheus](/docs/guides/mongodb/monitoring/using-builtin-prometheus.md).
 - Use [private Docker registry](/docs/guides/mongodb/private-registry/using-private-registry.md) to deploy MongoDB with KubeDB.

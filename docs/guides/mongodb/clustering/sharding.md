@@ -623,7 +623,7 @@ If you want to use custom or existing secret please specify that when creating t
 
   ```console
   $ kubectl get secrets -n demo mongo-sh-auth -o jsonpath='{.data.\password}' | base64 -d
-  7QiqLcuSCmZ8PU5a
+  VayjRMWqns-yx0zu
   ```
 
 Now, you can connect to this database through [mongo-shell](https://docs.mongodb.com/v3.6/mongo/).
@@ -635,29 +635,28 @@ In this tutorial, we will insert sharded and unsharded document, and we will see
 ```console
 $ kubectl get po -n demo -l mongodb.kubedb.com/node.mongos=mongo-sh-mongos
 NAME                               READY   STATUS    RESTARTS   AGE
-mongo-sh-mongos-69b557f9f5-2kz68   1/1     Running   0          49m
-mongo-sh-mongos-69b557f9f5-5hvh2   1/1     Running   0          49m
+mongo-sh-mongos-65c7c9cccc-gwwbx   1/1     Running   0          13m
+mongo-sh-mongos-65c7c9cccc-nslzh   1/1     Running   0          13m
 
-$ kubectl exec -it mongo-sh-mongos-69b557f9f5-2kz68 -n demo bash
+$ kubectl exec -it mongo-sh-mongos-65c7c9cccc-gwwbx -n demo bash
 
-mongodb@mongo-sh-mongos-69b557f9f5-2kz68:/$ mongo admin -u root -p 7QiqLcuSCmZ8PU5a
-MongoDB shell version v3.6.12
-connecting to: mongodb://127.0.0.1:27017/admin?gssapiServiceName=mongodb
-Implicit session: session { "id" : UUID("8b7abf57-09e4-4e30-b4a0-a37ebf065e8f") }
-MongoDB server version: 3.6.12
+mongodb@mongo-sh-mongos-65c7c9cccc-gwwbx:/$ mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD
+MongoDB shell version v4.1.13
+connecting to: mongodb://127.0.0.1:27017/admin?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("090b7364-74f4-4c68-a277-eb28451fa1e8") }
+MongoDB server version: 4.1.13
 Welcome to the MongoDB shell.
 For interactive help, type "help".
 For more comprehensive documentation, see
 	http://docs.mongodb.org/
 Questions? Try the support group
 	http://groups.google.com/group/mongodb-user
-2019-04-29T10:09:17.311+0000 I STORAGE  [main] In File::open(), ::open for '/home/mongodb/.mongorc.js' failed with No such file or directory
-mongos> isMaster;
-2019-04-29T10:11:16.128+0000 E QUERY    [thread1] ReferenceError: isMaster is not defined :
-@(shell):1:1
-mongos> isMaster();
-2019-04-29T10:11:20.020+0000 E QUERY    [thread1] ReferenceError: isMaster is not defined :
-@(shell):1:1
+Server has startup warnings: 
+2020-01-29T11:41:39.350+0000 I  CONTROL  [main] 
+2020-01-29T11:41:39.350+0000 I  CONTROL  [main] ** NOTE: This is a development version (4.1.13) of MongoDB.
+2020-01-29T11:41:39.350+0000 I  CONTROL  [main] **       Not recommended for production.
+2020-01-29T11:41:39.350+0000 I  CONTROL  [main] ** WARNING: You are running this process as the root user, which is not recommended.
+2020-01-29T11:41:39.350+0000 I  CONTROL  [main] 
 
 mongos>
 ```
@@ -672,17 +671,18 @@ mongos> rs.isMaster()
 	"maxBsonObjectSize" : 16777216,
 	"maxMessageSizeBytes" : 48000000,
 	"maxWriteBatchSize" : 100000,
-	"localTime" : ISODate("2019-04-29T10:12:00.145Z"),
+	"localTime" : ISODate("2020-01-29T11:55:55.469Z"),
 	"logicalSessionTimeoutMinutes" : 30,
-	"maxWireVersion" : 6,
+	"connectionId" : 190,
+	"maxWireVersion" : 8,
 	"minWireVersion" : 0,
 	"ok" : 1,
-	"operationTime" : Timestamp(1556532710, 1),
+	"operationTime" : Timestamp(1580298952, 1),
 	"$clusterTime" : {
-		"clusterTime" : Timestamp(1556532710, 1),
+		"clusterTime" : Timestamp(1580298952, 1),
 		"signature" : {
-			"hash" : BinData(0,"6W7pmWBdVSzY0x+BxQj74d0WhXg="),
-			"keyId" : NumberLong("6685242219722440730")
+			"hash" : BinData(0,"ggZNIQohNiKKRx9HvhEEy9ynq+4="),
+			"keyId" : NumberLong("6787327493494800404")
 		}
 	}
 }
@@ -692,26 +692,26 @@ mongos> rs.isMaster()
 
 ```console
 mongos> sh.status()
---- Sharding Status ---
+--- Sharding Status --- 
   sharding version: {
   	"_id" : 1,
   	"minCompatibleVersion" : 5,
   	"currentVersion" : 6,
-  	"clusterId" : ObjectId("5cc6c061f439d076e04d737b")
+  	"clusterId" : ObjectId("5e316e654a2cc3e885b7f985")
   }
   shards:
         {  "_id" : "shard0",  "host" : "shard0/mongo-sh-shard0-0.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017,mongo-sh-shard0-1.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017,mongo-sh-shard0-2.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
         {  "_id" : "shard1",  "host" : "shard1/mongo-sh-shard1-0.mongo-sh-shard1-gvr.demo.svc.cluster.local:27017,mongo-sh-shard1-1.mongo-sh-shard1-gvr.demo.svc.cluster.local:27017,mongo-sh-shard1-2.mongo-sh-shard1-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
         {  "_id" : "shard2",  "host" : "shard2/mongo-sh-shard2-0.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017,mongo-sh-shard2-1.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017,mongo-sh-shard2-2.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
   active mongoses:
-        "3.6.12" : 2
+        "4.1.13" : 2
   autosplit:
         Currently enabled: yes
   balancer:
         Currently enabled:  yes
         Currently running:  no
         Failed balancer rounds in last 5 attempts:  0
-        Migration Results for the last 24 hours:
+        Migration Results for the last 24 hours: 
                 No recent migrations
   databases:
         {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
@@ -721,7 +721,7 @@ mongos> sh.status()
                         balancing: true
                         chunks:
                                 shard0	1
-                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard0 Timestamp(1, 0)
+                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard0 Timestamp(1, 0) 
 ```
 
 Shard collection `test.testcoll` and insert document. See [`sh.shardCollection(namespace, key, unique, options)`](https://docs.mongodb.com/manual/reference/method/sh.shardCollection/#sh.shardCollection) for details about `shardCollection` command.
@@ -730,12 +730,12 @@ Shard collection `test.testcoll` and insert document. See [`sh.shardCollection(n
 mongos> sh.enableSharding("test");
 {
 	"ok" : 1,
-	"operationTime" : Timestamp(1556535000, 8),
+	"operationTime" : Timestamp(1580299004, 5),
 	"$clusterTime" : {
-		"clusterTime" : Timestamp(1556535000, 8),
+		"clusterTime" : Timestamp(1580299004, 5),
 		"signature" : {
-			"hash" : BinData(0,"84KefOzN8tKmsPfr6IrnBUxF9NM="),
-			"keyId" : NumberLong("6685242219722440730")
+			"hash" : BinData(0,"FRclmF9/OkdmFK4eUqBaf3yMBxg="),
+			"keyId" : NumberLong("6787327493494800404")
 		}
 	}
 }
@@ -743,14 +743,14 @@ mongos> sh.enableSharding("test");
 mongos> sh.shardCollection("test.testcoll", {"myfield": 1});
 {
 	"collectionsharded" : "test.testcoll",
-	"collectionUUID" : UUID("68ff9452-40bb-41a2-b35a-405132f90cd3"),
+	"collectionUUID" : UUID("d0d39751-2af9-4a76-9e51-8a08f311a934"),
 	"ok" : 1,
-	"operationTime" : Timestamp(1556535010, 8),
+	"operationTime" : Timestamp(1580299026, 15),
 	"$clusterTime" : {
-		"clusterTime" : Timestamp(1556535010, 8),
+		"clusterTime" : Timestamp(1580299026, 15),
 		"signature" : {
-			"hash" : BinData(0,"IgVzMa8qE4UBzjc2gOZJX5kZ3T4="),
-			"keyId" : NumberLong("6685242219722440730")
+			"hash" : BinData(0,"RRGRGitO2L9wVwAbfPPtxDFw4go="),
+			"keyId" : NumberLong("6787327493494800404")
 		}
 	}
 }
@@ -765,9 +765,8 @@ mongos> db.testcoll.insert({"myfield": "c", "otherfield": "d", "kube" : "db" });
 WriteResult({ "nInserted" : 1 })
 
 mongos> db.testcoll.find();
-{ "_id" : ObjectId("5cc6d6f656a9ddd30be2c12a"), "myfield" : "a", "otherfield" : "b" }
-{ "_id" : ObjectId("5cc6d71e56a9ddd30be2c12b"), "myfield" : "c", "otherfield" : "d", "kube" : "db" }
-
+{ "_id" : ObjectId("5e3173297459578f9c747ca3"), "myfield" : "a", "otherfield" : "b" }
+{ "_id" : ObjectId("5e3173337459578f9c747ca4"), "myfield" : "c", "otherfield" : "d", "kube" : "db" }
 ```
 
 Run [`sh.status()`](https://docs.mongodb.com/manual/reference/method/sh.status/) to see whether the `test` database has sharding enabled, and the primary shard for the `test` database.
@@ -776,26 +775,26 @@ The Sharded Collection section `sh.status.databases.<collection>` provides infor
 
 ```console
 mongos> sh.status();
---- Sharding Status ---
+--- Sharding Status --- 
   sharding version: {
   	"_id" : 1,
   	"minCompatibleVersion" : 5,
   	"currentVersion" : 6,
-  	"clusterId" : ObjectId("5cc6c061f439d076e04d737b")
+  	"clusterId" : ObjectId("5e316e654a2cc3e885b7f985")
   }
   shards:
         {  "_id" : "shard0",  "host" : "shard0/mongo-sh-shard0-0.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017,mongo-sh-shard0-1.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017,mongo-sh-shard0-2.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
         {  "_id" : "shard1",  "host" : "shard1/mongo-sh-shard1-0.mongo-sh-shard1-gvr.demo.svc.cluster.local:27017,mongo-sh-shard1-1.mongo-sh-shard1-gvr.demo.svc.cluster.local:27017,mongo-sh-shard1-2.mongo-sh-shard1-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
         {  "_id" : "shard2",  "host" : "shard2/mongo-sh-shard2-0.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017,mongo-sh-shard2-1.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017,mongo-sh-shard2-2.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
   active mongoses:
-        "3.6.12" : 2
+        "4.1.13" : 2
   autosplit:
         Currently enabled: yes
   balancer:
         Currently enabled:  yes
         Currently running:  no
         Failed balancer rounds in last 5 attempts:  0
-        Migration Results for the last 24 hours:
+        Migration Results for the last 24 hours: 
                 No recent migrations
   databases:
         {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
@@ -805,15 +804,15 @@ mongos> sh.status();
                         balancing: true
                         chunks:
                                 shard0	1
-                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard0 Timestamp(1, 0)
-        {  "_id" : "test",  "primary" : "shard1",  "partitioned" : true }
+                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard0 Timestamp(1, 0) 
+        {  "_id" : "test",  "primary" : "shard1",  "partitioned" : true,  "version" : {  "uuid" : UUID("5f4b734b-72e1-4c92-9e27-e4b32235092d"),  "lastMod" : 1 } }
                 test.testcoll
                         shard key: { "myfield" : 1 }
                         unique: false
                         balancing: true
                         chunks:
                                 shard1	1
-                        { "myfield" : { "$minKey" : 1 } } -->> { "myfield" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 0)
+                        { "myfield" : { "$minKey" : 1 } } -->> { "myfield" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 0) 
 ```
 
 Now create another database where partiotioned is not applied and see how the data is stored.
@@ -830,34 +829,34 @@ WriteResult({ "nInserted" : 1 })
 
 
 mongos> db.testcoll2.find()
-{ "_id" : ObjectId("5cc6dc831b6d9b3cddc947ec"), "myfield" : "ccc", "otherfield" : "d", "kube" : "db" }
-{ "_id" : ObjectId("5cc6dce71b6d9b3cddc947ed"), "myfield" : "aaa", "otherfield" : "d", "kube" : "db" }
+{ "_id" : ObjectId("5e31736a7459578f9c747ca5"), "myfield" : "ccc", "otherfield" : "d", "kube" : "db" }
+{ "_id" : ObjectId("5e3173717459578f9c747ca6"), "myfield" : "aaa", "otherfield" : "d", "kube" : "db" }
 ```
 
 Now, eventually `sh.status()`
 
 ```
 mongos> sh.status()
---- Sharding Status ---
+--- Sharding Status --- 
   sharding version: {
   	"_id" : 1,
   	"minCompatibleVersion" : 5,
   	"currentVersion" : 6,
-  	"clusterId" : ObjectId("5cc6c061f439d076e04d737b")
+  	"clusterId" : ObjectId("5e316e654a2cc3e885b7f985")
   }
   shards:
         {  "_id" : "shard0",  "host" : "shard0/mongo-sh-shard0-0.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017,mongo-sh-shard0-1.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017,mongo-sh-shard0-2.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
         {  "_id" : "shard1",  "host" : "shard1/mongo-sh-shard1-0.mongo-sh-shard1-gvr.demo.svc.cluster.local:27017,mongo-sh-shard1-1.mongo-sh-shard1-gvr.demo.svc.cluster.local:27017,mongo-sh-shard1-2.mongo-sh-shard1-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
         {  "_id" : "shard2",  "host" : "shard2/mongo-sh-shard2-0.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017,mongo-sh-shard2-1.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017,mongo-sh-shard2-2.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
   active mongoses:
-        "3.6.12" : 2
+        "4.1.13" : 2
   autosplit:
         Currently enabled: yes
   balancer:
         Currently enabled:  yes
         Currently running:  no
         Failed balancer rounds in last 5 attempts:  0
-        Migration Results for the last 24 hours:
+        Migration Results for the last 24 hours: 
                 No recent migrations
   databases:
         {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
@@ -867,16 +866,16 @@ mongos> sh.status()
                         balancing: true
                         chunks:
                                 shard0	1
-                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard0 Timestamp(1, 0)
-        {  "_id" : "demo",  "primary" : "shard2",  "partitioned" : false }
-        {  "_id" : "test",  "primary" : "shard1",  "partitioned" : true }
+                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard0 Timestamp(1, 0) 
+        {  "_id" : "demo",  "primary" : "shard2",  "partitioned" : false,  "version" : {  "uuid" : UUID("879acd2d-5cd4-4600-a0d7-fa45c339ce01"),  "lastMod" : 1 } }
+        {  "_id" : "test",  "primary" : "shard1",  "partitioned" : true,  "version" : {  "uuid" : UUID("5f4b734b-72e1-4c92-9e27-e4b32235092d"),  "lastMod" : 1 } }
                 test.testcoll
                         shard key: { "myfield" : 1 }
                         unique: false
                         balancing: true
                         chunks:
                                 shard1	1
-                        { "myfield" : { "$minKey" : 1 } } -->> { "myfield" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 0)
+                        { "myfield" : { "$minKey" : 1 } } -->> { "myfield" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 0) 
 ```
 
 Here, `demo` database is not partitioned and all collections under `demo` database are stored in it's primary shard, which is `shard2`.
@@ -925,8 +924,8 @@ NAMESPACE     NAME                                    READY   STATUS    RESTARTS
 demo          mongo-sh-configsvr-0                    1/1     Running   0          8m12s
 demo          mongo-sh-configsvr-1                    1/1     Running   0          7m41s
 demo          mongo-sh-configsvr-2                    1/1     Running   0          7m17s
-demo          mongo-sh-mongos-69b557f9f5-2qvb7        1/1     Running   0          3m44s
-demo          mongo-sh-mongos-69b557f9f5-6z2s4        1/1     Running   0          3m44s
+demo          mongo-sh-mongos-65c7c9cccc-gwwbx        1/1     Running   0          13m
+demo          mongo-sh-mongos-65c7c9cccc-nslzh        1/1     Running   0          13m
 demo          mongo-sh-shard0-0                       1/1     Running   0          7m4s
 demo          mongo-sh-shard0-1                       1/1     Running   0          6m37s
 demo          mongo-sh-shard0-2                       1/1     Running   0          6m20s
@@ -974,50 +973,30 @@ demo          mongo-sh-shard3-2                       0/1     Init:1/2          
 demo          mongo-sh-shard3-2                       0/1     PodInitializing   0          14s
 demo          mongo-sh-shard3-2                       0/1     Running           0          15s
 demo          mongo-sh-shard3-2                       1/1     Running           0          22s
-demo          mongo-sh-mongos-69b557f9f5-w77cs        0/1     Pending           0          0s
-demo          mongo-sh-mongos-69b557f9f5-w77cs        0/1     Pending           0          0s
-demo          mongo-sh-mongos-69b557f9f5-w77cs        0/1     Init:0/2          0          0s
-demo          mongo-sh-mongos-598658d8f9-6j544        0/1     Pending           0          0s
-demo          mongo-sh-mongos-598658d8f9-6j544        0/1     Pending           0          0s
-demo          mongo-sh-mongos-598658d8f9-6j544        0/1     Init:0/2          0          0s
-demo          mongo-sh-mongos-69b557f9f5-w77cs        0/1     Init:0/2          0          1s
-demo          mongo-sh-mongos-69b557f9f5-w77cs        0/1     Init:1/2          0          3s
-demo          mongo-sh-mongos-598658d8f9-6j544        0/1     Init:1/2          0          3s
-demo          mongo-sh-mongos-598658d8f9-6j544        0/1     Init:1/2          0          4s
-demo          mongo-sh-mongos-69b557f9f5-w77cs        0/1     Init:1/2          0          4s
-demo          mongo-sh-mongos-69b557f9f5-w77cs        0/1     PodInitializing   0          7s
-demo          mongo-sh-mongos-69b557f9f5-w77cs        0/1     Running           0          8s
-demo          mongo-sh-mongos-598658d8f9-6j544        0/1     PodInitializing   0          8s
-demo          mongo-sh-mongos-598658d8f9-6j544        0/1     Running           0          9s
-demo          mongo-sh-mongos-598658d8f9-6j544        1/1     Running           0          12s
-demo          mongo-sh-mongos-69b557f9f5-w77cs        0/1     Terminating       0          12s
-demo          mongo-sh-mongos-598658d8f9-tmwvb        0/1     Pending           0          0s
-demo          mongo-sh-mongos-598658d8f9-tmwvb        0/1     Pending           0          1s
-demo          mongo-sh-mongos-598658d8f9-tmwvb        0/1     Init:0/2          0          1s
-demo          mongo-sh-mongos-598658d8f9-tmwvb        0/1     Init:1/2          0          3s
-demo          mongo-sh-mongos-69b557f9f5-w77cs        0/1     Terminating       0          15s
-demo          mongo-sh-mongos-598658d8f9-tmwvb        0/1     Init:1/2          0          4s
-demo          mongo-sh-mongos-69b557f9f5-w77cs        0/1     Terminating       0          19s
-demo          mongo-sh-mongos-69b557f9f5-w77cs        0/1     Terminating       0          19s
-demo          mongo-sh-mongos-598658d8f9-tmwvb        0/1     PodInitializing   0          7s
-demo          mongo-sh-mongos-598658d8f9-tmwvb        0/1     Running           0          8s
-demo          mongo-sh-mongos-598658d8f9-tmwvb        1/1     Running           0          10s
-demo          mongo-sh-mongos-69b557f9f5-6z2s4        1/1     Terminating       0          6m6s
-demo          mongo-sh-mongos-598658d8f9-464xr        0/1     Pending           0          0s
-demo          mongo-sh-mongos-598658d8f9-464xr        0/1     Pending           0          0s
-demo          mongo-sh-mongos-598658d8f9-464xr        0/1     Init:0/2          0          0s
-demo          mongo-sh-mongos-69b557f9f5-6z2s4        0/1     Terminating       0          6m7s
-demo          mongo-sh-mongos-598658d8f9-464xr        0/1     Init:1/2          0          2s
-demo          mongo-sh-mongos-598658d8f9-464xr        0/1     Init:1/2          0          3s
-demo          mongo-sh-mongos-598658d8f9-464xr        0/1     PodInitializing   0          6s
-demo          mongo-sh-mongos-69b557f9f5-6z2s4        0/1     Terminating       0          6m13s
-demo          mongo-sh-mongos-69b557f9f5-6z2s4        0/1     Terminating       0          6m13s
-demo          mongo-sh-mongos-598658d8f9-464xr        0/1     Running           0          7s
-demo          mongo-sh-mongos-598658d8f9-464xr        1/1     Running           0          14s
-demo          mongo-sh-mongos-69b557f9f5-2qvb7        1/1     Terminating       0          6m21s
-demo          mongo-sh-mongos-69b557f9f5-2qvb7        0/1     Terminating       0          6m22s
-demo          mongo-sh-mongos-69b557f9f5-2qvb7        0/1     Terminating       0          6m23s
-demo          mongo-sh-mongos-69b557f9f5-2qvb7        0/1     Terminating       0          6m23s
+demo          mongo-sh-mongos-54b94d59c-dq5nx                   0/1     Pending             0          0s
+demo          mongo-sh-mongos-54b94d59c-dq5nx                   0/1     Pending             0          0s
+demo          mongo-sh-mongos-54b94d59c-dq5nx                   0/1     Init:0/2            0          0s
+demo          mongo-sh-mongos-54b94d59c-dq5nx                   0/1     Init:1/2            0          1s
+demo          mongo-sh-mongos-54b94d59c-dq5nx                   0/1     Init:1/2            0          2s
+demo          mongo-sh-mongos-54b94d59c-dq5nx                   0/1     PodInitializing     0          8s
+demo          mongo-sh-mongos-54b94d59c-dq5nx                   0/1     Running             0          9s
+demo          mongo-sh-mongos-54b94d59c-dq5nx                   1/1     Running             0          19s
+demo          mongo-sh-mongos-65c7c9cccc-nslzh                  1/1     Terminating         0          21m
+demo          mongo-sh-mongos-54b94d59c-sbckp                   0/1     Pending             0          0s
+demo          mongo-sh-mongos-54b94d59c-sbckp                   0/1     Pending             0          0s
+demo          mongo-sh-mongos-54b94d59c-sbckp                   0/1     Init:0/2            0          0s
+demo          mongo-sh-mongos-65c7c9cccc-nslzh                  0/1     Terminating         0          21m
+demo          mongo-sh-mongos-54b94d59c-sbckp                   0/1     Init:1/2            0          2s
+demo          mongo-sh-mongos-65c7c9cccc-nslzh                  0/1     Terminating         0          21m
+demo          mongo-sh-mongos-65c7c9cccc-nslzh                  0/1     Terminating         0          21m
+demo          mongo-sh-mongos-54b94d59c-sbckp                   0/1     Init:1/2            0          3s
+demo          mongo-sh-mongos-54b94d59c-sbckp                   0/1     PodInitializing     0          9s
+demo          mongo-sh-mongos-54b94d59c-sbckp                   0/1     Running             0          10s
+demo          mongo-sh-mongos-54b94d59c-sbckp                   1/1     Running             0          21s
+demo          mongo-sh-mongos-65c7c9cccc-gwwbx                  1/1     Terminating         0          21m
+demo          mongo-sh-mongos-65c7c9cccc-gwwbx                  0/1     Terminating         0          21m
+demo          mongo-sh-mongos-65c7c9cccc-gwwbx                  0/1     Terminating         0          21m
+demo          mongo-sh-mongos-65c7c9cccc-gwwbx                  0/1     Terminating         0          21m
 ```
 
 You can see that an extra statefulset `mongo-sh-shard3` is created as 4th shard and one extra mongos instance also came up.
@@ -1027,35 +1006,37 @@ Notice that, all new mongos instances came up replacing old instances because of
 ```console
 $ kubectl get deploy -n demo -w
 NAME              READY   UP-TO-DATE   AVAILABLE   AGE
-mongo-sh-mongos   2/2     2            2           12m
-mongo-sh-mongos   2/3     2            2           13m
-mongo-sh-mongos   2/3     2            2           13m
-mongo-sh-mongos   2/3     2            2           13m
-mongo-sh-mongos   2/3     3            2           13m
-mongo-sh-mongos   3/3     3            3           13m
+mongo-sh-mongos   2/2     2            2           24m
+mongo-sh-mongos   2/2     2            2           24m
+mongo-sh-mongos   2/2     2            2           24m
+mongo-sh-mongos   2/2     0            2           24m
+mongo-sh-mongos   2/2     1            2           24m
+mongo-sh-mongos   3/2     1            3           24m
+mongo-sh-mongos   2/2     1            2           24m
+mongo-sh-mongos   2/2     2            2           24m
+mongo-sh-mongos   3/2     2            3           25m
+mongo-sh-mongos   2/2     2            2           25m
 ```
 
 Now check `sh.status()` in `mongos`,
 
 ```console
 $ kubectl get po -n demo -l mongodb.kubedb.com/node.mongos=mongo-sh-mongos
-NAME                               READY   STATUS    RESTARTS   AGE
-mongo-sh-mongos-598658d8f9-6j544   1/1     Running   0          17m
-mongo-sh-mongos-598658d8f9-s8gn4   1/1     Running   0          9m54s
-mongo-sh-mongos-598658d8f9-tmwvb   1/1     Running   0          16m
+NAME                              READY   STATUS    RESTARTS   AGE
+mongo-sh-mongos-54b94d59c-dbzcj   1/1     Running   0          64s
+mongo-sh-mongos-54b94d59c-qx468   1/1     Running   0          48s
 
+$ kubectl exec -it mongo-sh-mongos-54b94d59c-dbzcj -n demo bash
 
-$ kubectl exec -it mongo-sh-mongos-598658d8f9-6j544 -n demo bash
-
-mongodb@mongo-sh-mongos-598658d8f9-6j544:/$ mongo admin -u root -p 7QiqLcuSCmZ8PU5a
+mongodb@mongo-sh-mongos-54b94d59c-dbzcj:/$ mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD
 
 mongos> sh.status()
---- Sharding Status ---
+--- Sharding Status --- 
   sharding version: {
   	"_id" : 1,
   	"minCompatibleVersion" : 5,
   	"currentVersion" : 6,
-  	"clusterId" : ObjectId("5cc7ed91d06f28b1b3c64c66")
+  	"clusterId" : ObjectId("5e316e654a2cc3e885b7f985")
   }
   shards:
         {  "_id" : "shard0",  "host" : "shard0/mongo-sh-shard0-0.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017,mongo-sh-shard0-1.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017,mongo-sh-shard0-2.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
@@ -1063,14 +1044,14 @@ mongos> sh.status()
         {  "_id" : "shard2",  "host" : "shard2/mongo-sh-shard2-0.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017,mongo-sh-shard2-1.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017,mongo-sh-shard2-2.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
         {  "_id" : "shard3",  "host" : "shard3/mongo-sh-shard3-0.mongo-sh-shard3-gvr.demo.svc.cluster.local:27017,mongo-sh-shard3-1.mongo-sh-shard3-gvr.demo.svc.cluster.local:27017,mongo-sh-shard3-2.mongo-sh-shard3-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
   active mongoses:
-        "3.6.12" : 3
+        "4.1.13" : 2
   autosplit:
         Currently enabled: yes
   balancer:
         Currently enabled:  yes
         Currently running:  no
         Failed balancer rounds in last 5 attempts:  0
-        Migration Results for the last 24 hours:
+        Migration Results for the last 24 hours: 
                 No recent migrations
   databases:
         {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
@@ -1080,255 +1061,138 @@ mongos> sh.status()
                         balancing: true
                         chunks:
                                 shard0	1
-                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard0 Timestamp(1, 0)
-        {  "_id" : "demo",  "primary" : "shard2",  "partitioned" : false }
-        {  "_id" : "test",  "primary" : "shard1",  "partitioned" : true }
+                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard0 Timestamp(1, 0) 
+        {  "_id" : "demo",  "primary" : "shard2",  "partitioned" : false,  "version" : {  "uuid" : UUID("879acd2d-5cd4-4600-a0d7-fa45c339ce01"),  "lastMod" : 1 } }
+        {  "_id" : "test",  "primary" : "shard1",  "partitioned" : true,  "version" : {  "uuid" : UUID("5f4b734b-72e1-4c92-9e27-e4b32235092d"),  "lastMod" : 1 } }
                 test.testcoll
                         shard key: { "myfield" : 1 }
                         unique: false
                         balancing: true
                         chunks:
                                 shard1	1
-                        { "myfield" : { "$minKey" : 1 } } -->> { "myfield" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 0)
+                        { "myfield" : { "$minKey" : 1 } } -->> { "myfield" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 0) 
 ```
 
-## Pause Database
+## Halt Database
 
-When `terminationPolicy` is `DoNotTerminate`, KubeDB takes advantage of `ValidationWebhook` feature in Kubernetes 1.9.0 or later clusters to implement `DoNotTerminate` feature. If admission webhook is enabled, It prevents users from deleting the database as long as the `spec.terminationPolicy` is set to `DoNotTerminate`.
+User can halt the database by setting `spec.halted` to `true`. As the name suggests, this will halt the database by deleting all the kubernetes resources (including `sts`, `services`, rbac resources, etc) except `secrets` and `PVCs`. On the other hand, when users wishes to resume a halted database, they will need to set `spec.halted` to `false`.
 
-Since the MongoDB object created in this tutorial has `spec.terminationPolicy` set to `Pause` (default), if you delete the MongoDB object, KubeDB operator will create a dormant database while deleting the StatefulSet and its pods but leaves the PVCs unchanged.
+Please Note that, if [spec.terminationPolicy](/docs/concepts/databases/mongodb.md#specterminationpolicy) is set to `DoNotTerminate`, the halt database operation will fail with forbidden error message from admission controller. 
+
+If [spec.terminationPolicy](/docs/concepts/databases/mongodb.md#specterminationpolicy) is not set to `DoNotTerminate`, then kubedb will accept the user's halt request and also it will update the `spec.terminationPolicy` to `Halt`.
+
+Set `spec.halted` to `true`.
 
 ```console
-$ kubedb delete mg mongo-sh -n demo
-mongodb.kubedb.com "mongo-sh" deleted
-
-$ kubedb get drmn -n demo mongo-sh
-NAME       STATUS    AGE
-mongo-sh   Pausing   13s
-
-$ kubedb get drmn -n demo mongo-sh
-NAME       STATUS   AGE
-mongo-sh   Paused   52s
+$ kubectl patch -n demo mg/mongo-sh -p '{"spec":{"halted":true}}' --type="merge"
+mongodb.kubedb.com/mongo-sh patched
 ```
 
-```yaml
-$ kubedb get drmn -n demo mongo-sh -o yaml
-apiVersion: kubedb.com/v1alpha1
-kind: DormantDatabase
-metadata:
-  creationTimestamp: "2019-04-29T11:24:24Z"
-  finalizers:
-  - kubedb.com
-  generation: 1
-  labels:
-    kubedb.com/kind: MongoDB
-  name: mongo-sh
-  namespace: demo
-  resourceVersion: "35082"
-  selfLink: /apis/kubedb.com/v1alpha1/namespaces/demo/dormantdatabases/mongo-sh
-  uid: 579c2c2d-6a71-11e9-a871-080027a851ba
-spec:
-  origin:
-    metadata:
-      creationTimestamp: "2019-04-29T09:13:56Z"
-      name: mongo-sh
-      namespace: demo
-    spec:
-      mongodb:
-        certificateSecret:
-          secretName: mongo-sh-keyfile
-        databaseSecret:
-          secretName: mongo-sh-auth
-        serviceTemplate:
-          metadata: {}
-          spec: {}
-        shardTopology:
-          configServer:
-            podTemplate:
-              controller: {}
-              metadata: {}
-              spec:
-                livenessProbe:
-                  exec:
-                    command:
-                    - mongo
-                    - --eval
-                    - db.adminCommand('ping')
-                  failureThreshold: 3
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 5
-                readinessProbe:
-                  exec:
-                    command:
-                    - mongo
-                    - --eval
-                    - db.adminCommand('ping')
-                  failureThreshold: 3
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 1
-                resources: {}
-                securityContext:
-                  fsGroup: 999
-                  runAsNonRoot: true
-                  runAsUser: 999
-            replicas: 3
-            storage:
-              dataSource: null
-              resources:
-                requests:
-                  storage: 1Gi
-              storageClassName: standard
-          mongos:
-            podTemplate:
-              controller: {}
-              metadata: {}
-              spec:
-                livenessProbe:
-                  exec:
-                    command:
-                    - mongo
-                    - --eval
-                    - db.adminCommand('ping')
-                  failureThreshold: 3
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 5
-                readinessProbe:
-                  exec:
-                    command:
-                    - mongo
-                    - --eval
-                    - db.adminCommand('ping')
-                  failureThreshold: 3
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 1
-                resources: {}
-                securityContext:
-                  fsGroup: 999
-                  runAsNonRoot: true
-                  runAsUser: 999
-            replicas: 2
-            strategy:
-              type: RollingUpdate
-          shard:
-            podTemplate:
-              controller: {}
-              metadata: {}
-              spec:
-                livenessProbe:
-                  exec:
-                    command:
-                    - mongo
-                    - --eval
-                    - db.adminCommand('ping')
-                  failureThreshold: 3
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 5
-                readinessProbe:
-                  exec:
-                    command:
-                    - mongo
-                    - --eval
-                    - db.adminCommand('ping')
-                  failureThreshold: 3
-                  periodSeconds: 10
-                  successThreshold: 1
-                  timeoutSeconds: 1
-                resources: {}
-                securityContext:
-                  fsGroup: 999
-                  runAsNonRoot: true
-                  runAsUser: 999
-            replicas: 3
-            shards: 3
-            storage:
-              dataSource: null
-              resources:
-                requests:
-                  storage: 1Gi
-              storageClassName: standard
-        storageType: Durable
-        terminationPolicy: Halt
-        updateStrategy:
-          type: RollingUpdate
-        version: "4.1"
-status:
-  observedGeneration: 1$16440556888999634490
-  pausingTime: "2019-04-29T11:24:41Z"
-  phase: Paused
-```
-
-Here,
-
-- `spec.origin` is the spec of the original spec of the original MongoDB object.
-- `status.phase` points to the current database state `Paused`.
-
-## Resume Dormant Database
-
-To resume the database from the dormant state, create same `MongoDB` object with same Spec.
-
-In this tutorial, the dormant database can be resumed by creating original MongoDB object.
-
-The below command will resume the DormantDatabase `mongo-sh`.
+Database status will be set to `Halted` after successful deletion of kubernetes resources.
 
 ```console
-$ kubectl create -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/mongodb/clustering/mongo-sh.yaml
-mongodb.kubedb.com/mongo-sh created
+$ kubectl get mongodb -n demo
+NAME       VERSION   STATUS   AGE
+mongo-sh   4.1       Halted   33m
 ```
 
 ```console
-$ kubectl get mg -n demo
-NAME       VERSION   STATUS    AGE
-mongo-sh   3.6-v3    Running   6m27s
+$ kubedb describe mg -n demo mongo-sh
+Name:               mongo-sh
+Namespace:          demo
+CreationTimestamp:  Wed, 29 Jan 2020 17:36:37 +0600
+Labels:             <none>
+Annotations:        <none>
+Status:             Halted
+  StorageType:      Durable
+No volumes.
+
+Database Secret:
+  Name:         mongo-sh-auth
+  Labels:         app.kubernetes.io/component=database
+                  app.kubernetes.io/instance=mongo-sh
+                  app.kubernetes.io/managed-by=kubedb.com
+                  app.kubernetes.io/name=mongodb
+                  app.kubernetes.io/version=4.1
+                  kubedb.com/kind=MongoDB
+                  kubedb.com/name=mongo-sh
+  Annotations:  <none>
+  
+Type:  Opaque
+  
+Data
+====
+  password:  16 bytes
+  username:  4 bytes
+
+Events:
+  Type    Reason      Age   From              Message
+  ----    ------      ----  ----              -------
+  ...
+  Normal  Successful  4m    MongoDB operator  Successfully patched StatefulSet demo/mongo-sh-configsvr
+  Normal  Successful  4m    MongoDB operator  Successfully patched Deployment demo/mongo-sh-mongos
+  Normal  Successful  4m    MongoDB operator  Successfully patched MongoDB
+  Normal  Successful  4m    MongoDB operator  Successfully patched StatefulSet demo/mongo-sh-shard0
+```
+
+## Resume Database
+
+To resume the database, set `spec.halted` to `false`.
+
+```console
+$ kubectl patch -n demo mg/mongo-sh -p '{"spec":{"halted":false}}' --type="merge"
+mongodb.kubedb.com/mongo-sh patched
+```
+
+```console
+$ kubectl get mongodb -n demo
+NAME             VERSION   STATUS    AGE
+mongo-sh   4.1       Running   21m
 ```
 
 Now, If you again exec into `pod` and look for previous data, you will see that, all the data persists.
 
 ```console
 $ kubectl get po -n demo -l mongodb.kubedb.com/node.mongos=mongo-sh-mongos
-NAME                               READY   STATUS    RESTARTS   AGE
-mongo-sh-mongos-69b557f9f5-62j76   1/1     Running   0          3m52s
-mongo-sh-mongos-69b557f9f5-tdn69   1/1     Running   0          3m52s
+NAME                              READY   STATUS    RESTARTS   AGE
+mongo-sh-mongos-54b94d59c-qswl2   1/1     Running   0          22s
+mongo-sh-mongos-54b94d59c-th4c6   1/1     Running   0          22s
 
+$ kubectl exec -it mongo-sh-mongos-54b94d59c-qswl2 -n demo bash
 
-$ kubectl exec -it mongo-sh-mongos-69b557f9f5-62j76 -n demo bash
-
-mongodb@mongo-sh-mongos-69b557f9f5-62j76:/$ mongo admin -u root -p 7QiqLcuSCmZ8PU5a
+mongodb@mongo-sh-mongos-54b94d59c-qswl2:/$ mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD
 
 mongos> use test;
 switched to db test
 
 mongos> db.testcoll.find();
-{ "_id" : ObjectId("5cc6d6f656a9ddd30be2c12a"), "myfield" : "a", "otherfield" : "b" }
-{ "_id" : ObjectId("5cc6d71e56a9ddd30be2c12b"), "myfield" : "c", "otherfield" : "d", "kube" : "db" }
+{ "_id" : ObjectId("5e3173297459578f9c747ca3"), "myfield" : "a", "otherfield" : "b" }
+{ "_id" : ObjectId("5e3173337459578f9c747ca4"), "myfield" : "c", "otherfield" : "d", "kube" : "db" }
 
 mongos> sh.status()
---- Sharding Status ---
+--- Sharding Status --- 
   sharding version: {
   	"_id" : 1,
   	"minCompatibleVersion" : 5,
   	"currentVersion" : 6,
-  	"clusterId" : ObjectId("5cc6c061f439d076e04d737b")
+  	"clusterId" : ObjectId("5e316e654a2cc3e885b7f985")
   }
   shards:
         {  "_id" : "shard0",  "host" : "shard0/mongo-sh-shard0-0.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017,mongo-sh-shard0-1.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017,mongo-sh-shard0-2.mongo-sh-shard0-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
         {  "_id" : "shard1",  "host" : "shard1/mongo-sh-shard1-0.mongo-sh-shard1-gvr.demo.svc.cluster.local:27017,mongo-sh-shard1-1.mongo-sh-shard1-gvr.demo.svc.cluster.local:27017,mongo-sh-shard1-2.mongo-sh-shard1-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
         {  "_id" : "shard2",  "host" : "shard2/mongo-sh-shard2-0.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017,mongo-sh-shard2-1.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017,mongo-sh-shard2-2.mongo-sh-shard2-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
+        {  "_id" : "shard3",  "host" : "shard3/mongo-sh-shard3-0.mongo-sh-shard3-gvr.demo.svc.cluster.local:27017,mongo-sh-shard3-1.mongo-sh-shard3-gvr.demo.svc.cluster.local:27017,mongo-sh-shard3-2.mongo-sh-shard3-gvr.demo.svc.cluster.local:27017",  "state" : 1 }
   active mongoses:
-        "3.6.12" : 2
+        "4.1.13" : 2
   autosplit:
         Currently enabled: yes
   balancer:
         Currently enabled:  yes
         Currently running:  no
-        Failed balancer rounds in last 5 attempts:  5
-        Last reported error:  Could not find host matching read preference { mode: "primary" } for set shard2
-        Time of Reported error:  Mon Apr 29 2019 11:30:33 GMT+0000 (UTC)
-        Migration Results for the last 24 hours:
+        Failed balancer rounds in last 5 attempts:  3
+        Last reported error:  Could not find host matching read preference { mode: "primary" } for set shard0
+        Time of Reported error:  Wed Jan 29 2020 12:14:55 GMT+0000 (UTC)
+        Migration Results for the last 24 hours: 
                 No recent migrations
   databases:
         {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
@@ -1338,53 +1202,31 @@ mongos> sh.status()
                         balancing: true
                         chunks:
                                 shard0	1
-                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard0 Timestamp(1, 0)
-        {  "_id" : "demo",  "primary" : "shard2",  "partitioned" : false }
-        {  "_id" : "test",  "primary" : "shard1",  "partitioned" : true }
+                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard0 Timestamp(1, 0) 
+        {  "_id" : "demo",  "primary" : "shard2",  "partitioned" : false,  "version" : {  "uuid" : UUID("879acd2d-5cd4-4600-a0d7-fa45c339ce01"),  "lastMod" : 1 } }
+        {  "_id" : "test",  "primary" : "shard1",  "partitioned" : true,  "version" : {  "uuid" : UUID("5f4b734b-72e1-4c92-9e27-e4b32235092d"),  "lastMod" : 1 } }
                 test.testcoll
                         shard key: { "myfield" : 1 }
                         unique: false
                         balancing: true
                         chunks:
                                 shard1	1
-                        { "myfield" : { "$minKey" : 1 } } -->> { "myfield" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 0)
+                        { "myfield" : { "$minKey" : 1 } } -->> { "myfield" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 0) 
 
+> exit
+bye
 ```
 
 ## WipeOut DormantDatabase
 
-You can wipe out a DormantDatabase while deleting the object by setting `spec.wipeOut` to true. KubeDB operator will delete any relevant resources of this `MongoDB` database (i.e, PVCs, Secrets, Snapshots). It will also delete snapshot data stored in the Cloud Storage buckets.
+You can wipe out the database while deleting the object by setting `spec.terminationPolicy` to `WipeOut`. KubeDB operator will delete any relevant resources of this `MongoDB` database (i.e, PVCs, Secrets, Rbac resources, Statefulsets, stash backup data). It will also delete stash backup data stored in the Cloud Storage buckets.
 
 ```console
-$ kubedb delete mg mongo-sh -n demo
+$ kubectl patch -n demo mg/mongo-sh -p '{"spec":{"terminationPolicy":"WipeOut"}}' --type="merge"
+mongodb.kubedb.com/mongo-sh patched
+
+$ kubectl delete -n demo mg/mongo-sh
 mongodb.kubedb.com "mongo-sh" deleted
-```
-
-```yaml
-$ kubedb edit drmn -n demo mongo-sh
-apiVersion: kubedb.com/v1alpha1
-kind: DormantDatabase
-metadata:
-  name: mongo-sh
-  namespace: demo
-  ...
-spec:
-  wipeOut: true
-  ...
-status:
-  phase: Paused
-  ...
-```
-
-If `spec.wipeOut` is not set to true while deleting the `dormantdatabase` object, then only this object will be deleted and `kubedb-operator` won't delete related Secrets, PVCs, and Snapshots. So, users still can access the stored data in the cloud storage buckets as well as PVCs.
-
-## Delete DormantDatabase
-
-As it is already discussed above, `DormantDatabase` can be deleted with or without wiping out the resources. To delete the `dormantdatabase`,
-
-```console
-$ kubectl delete drmn mongo-sh -n demo
-dormantdatabase.kubedb.com "mongo-sh" deleted
 ```
 
 ## Cleaning up
@@ -1395,18 +1237,12 @@ To cleanup the Kubernetes resources created by this tutorial, run:
 kubectl patch -n demo mg/mongo-sh -p '{"spec":{"terminationPolicy":"WipeOut"}}' --type="merge"
 kubectl delete -n demo mg/mongo-sh
 
-kubectl patch -n demo drmn/mongo-sh -p '{"spec":{"wipeOut":true}}' --type="merge"
-kubectl delete -n demo drmn/mongo-sh
-
 kubectl delete ns demo
 ```
 
 ## Next Steps
 
-- [Snapshot and Restore](/docs/guides/mongodb/snapshot/backup-and-restore.md) process of MongoDB databases using KubeDB.
-- Take [Scheduled Snapshot](/docs/guides/mongodb/snapshot/scheduled-backup.md) of MongoDB databases using KubeDB.
 - Initialize [MongoDB with Script](/docs/guides/mongodb/initialization/using-script.md).
-- Initialize [MongoDB with Snapshot](/docs/guides/mongodb/initialization/using-snapshot.md).
 - Monitor your MongoDB database with KubeDB using [out-of-the-box CoreOS Prometheus Operator](/docs/guides/mongodb/monitoring/using-coreos-prometheus-operator.md).
 - Monitor your MongoDB database with KubeDB using [out-of-the-box builtin-Prometheus](/docs/guides/mongodb/monitoring/using-builtin-prometheus.md).
 - Use [private Docker registry](/docs/guides/mongodb/private-registry/using-private-registry.md) to deploy MongoDB with KubeDB.

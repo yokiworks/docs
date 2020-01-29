@@ -57,14 +57,14 @@ $ kubectl get serviceaccount -n demo my-custom-serviceaccount -o yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  creationTimestamp: "2019-05-30T04:23:39Z"
+  creationTimestamp: "2020-01-30T04:42:49Z"
   name: my-custom-serviceaccount
   namespace: demo
-  resourceVersion: "21657"
-  selfLink: /api/v1/namespaces/demo/serviceaccounts/myserviceaccount
-  uid: b2ec2b05-8292-11e9-8d10-080027a8b217
+  resourceVersion: "4597"
+  selfLink: /api/v1/namespaces/demo/serviceaccounts/my-custom-serviceaccount
+  uid: 38653c53-0533-45a9-92fc-1df722323d30
 secrets:
-- name: myserviceaccount-token-t8zxd
+- name: my-custom-serviceaccount-token-cbzx7
 ```
 
 Now, we need to create a role that has necessary access permissions for the MongoDB instance named `quick-mongodb`.
@@ -110,12 +110,12 @@ $ kubectl get rolebinding -n demo my-custom-rolebinding -o yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  creationTimestamp: "kubectl get rolebinding -n demo my-custom-rolebinding -o yaml"
+  creationTimestamp: "2020-01-30T04:44:06Z"
   name: my-custom-rolebinding
   namespace: demo
-  resourceVersion: "1405"
+  resourceVersion: "4750"
   selfLink: /apis/rbac.authorization.k8s.io/v1/namespaces/demo/rolebindings/my-custom-rolebinding
-  uid: 123afc02-8297-11e9-8d10-080027a8b217
+  uid: da482b9b-fb40-456a-b332-eb38b58452a0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -124,7 +124,6 @@ subjects:
 - kind: ServiceAccount
   name: my-custom-serviceaccount
   namespace: demo
-
 ```
 
 Now, create a MongoDB crd specifying `spec.podTemplate.spec.serviceAccountName` field to `my-custom-serviceaccount`.
@@ -159,14 +158,13 @@ spec:
 
 ```
 
-Now, wait a few minutes. the KubeDB operator will create necessary PVC, deployment, statefulsets, services, secret etc. If everything goes well, we should see that a pod with the name `quick-mongodb-0` has been created.
-
-Check that the statefulset's pod is running
+Now, wait a few minutes. the KubeDB operator will create necessary PVC, deployment, statefulsets, services, secret etc.
+Wait for mongodb database's status to become `Running`.
 
 ```console
-$ kubectl get pod -n demo quick-mongodb-0
-NAME                READY     STATUS    RESTARTS   AGE
-quick-mongodb-0   1/1       Running   0          14m
+$ kubectl get mongodb -n demo
+NAME            VERSION   STATUS    AGE
+quick-mongodb   4.1       Running   39s
 ```
 
 Check the pod's log to see if the database is ready
@@ -224,15 +222,16 @@ spec:
 
 ```
 
-Now, wait a few minutes. the KubeDB operator will create necessary PVC, statefulset, deployment, services, secret etc. If everything goes well, we should see that a pod with the name `minute-mongodb-0` has been created.
-
-Check that the statefulset's pod is running
+Now, wait a few minutes. the KubeDB operator will create necessary PVC, statefulset, deployment, services, secret etc.
+Wait for mongodb database's status to become `Running`.
 
 ```console
-$ kubectl get pod -n demo minute-mongodb-0
-NAME                READY     STATUS    RESTARTS   AGE
-minute-mongodb-0   1/1       Running   0          14m
+$ kubectl get mongodb -n demo
+NAME             VERSION   STATUS    AGE
+minute-mongodb   4.1       Running   39s
+quick-mongodb    4.1       Running   3m
 ```
+
 
 Check the pod's log to see if the database is ready
 
@@ -277,15 +276,11 @@ If you would like to uninstall the KubeDB operator, please follow the steps [her
 ## Next Steps
 
 - [Quickstart MongoDB](/docs/guides/mongodb/quickstart/quickstart.md) with KubeDB Operator.
-- [Snapshot and Restore](/docs/guides/mongodb/snapshot/backup-and-restore.md) process of MongoDB instances using KubeDB.
-- Take [Scheduled Snapshot](/docs/guides/mongodb/snapshot/scheduled-backup.md) of MongoDB instances using KubeDB.
 - Initialize [MongoDB with Script](/docs/guides/mongodb/initialization/using-script.md).
-- Initialize [MongoDB with Snapshot](/docs/guides/mongodb/initialization/using-snapshot.md).
 - Monitor your MongoDB instance with KubeDB using [out-of-the-box CoreOS Prometheus Operator](/docs/guides/mongodb/monitoring/using-coreos-prometheus-operator.md).
 - Monitor your MongoDB instance with KubeDB using [out-of-the-box builtin-Prometheus](/docs/guides/mongodb/monitoring/using-builtin-prometheus.md).
 - Use [private Docker registry](/docs/guides/mongodb/private-registry/using-private-registry.md) to deploy MongoDB with KubeDB.
 - Use [kubedb cli](/docs/guides/mongodb/cli/cli.md) to manage databases like kubectl for Kubernetes.
 - Detail concepts of [MongoDB object](/docs/concepts/databases/mongodb.md).
-- Detail concepts of [Snapshot object](/docs/concepts/snapshot.md).
 - Want to hack on KubeDB? Check our [contribution guidelines](/docs/CONTRIBUTING.md).
 
