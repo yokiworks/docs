@@ -72,7 +72,7 @@ spec:
 ```
 
 ```console
-$ kubectl create -f https://github.com/kubedb/docs/raw/{{< param "info.version" >}}//docs/examples/mongodb/clustering/mongo-sharding.yaml
+$ kubectl create -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/mongodb/clustering/mongo-sharding.yaml
 mongodb.kubedb.com/mongo-sh created
 ```
 
@@ -107,7 +107,213 @@ MongoDB `mongo-sh` state,
 ```console
 $ kubectl get mg -n demo
 NAME       VERSION   STATUS    AGE
-mongo-sh   3.6-v3    Running   9m41s
+mongo-sh   4.1       Running   6m9s
+```
+
+```console
+$ kubedb describe mg -n demo mongo-sh
+Name:               mongo-sh
+Namespace:          demo
+CreationTimestamp:  Wed, 29 Jan 2020 17:36:37 +0600
+Labels:             <none>
+Annotations:        <none>
+Status:             Running
+  StorageType:      Durable
+No volumes.
+
+StatefulSet:          
+  Name:               mongo-sh-configsvr
+  CreationTimestamp:  Wed, 29 Jan 2020 17:36:38 +0600
+  Labels:               app.kubernetes.io/component=database
+                        app.kubernetes.io/instance=mongo-sh
+                        app.kubernetes.io/managed-by=kubedb.com
+                        app.kubernetes.io/name=mongodb
+                        app.kubernetes.io/version=4.1
+                        kubedb.com/kind=MongoDB
+                        kubedb.com/name=mongo-sh
+  Annotations:        <none>
+  Replicas:           824639987012 desired | 3 total
+  Pods Status:        3 Running / 0 Waiting / 0 Succeeded / 0 Failed
+
+StatefulSet:          
+  Name:               mongo-sh-shard0
+  CreationTimestamp:  Wed, 29 Jan 2020 17:36:38 +0600
+  Labels:               app.kubernetes.io/component=database
+                        app.kubernetes.io/instance=mongo-sh
+                        app.kubernetes.io/managed-by=kubedb.com
+                        app.kubernetes.io/name=mongodb
+                        app.kubernetes.io/version=4.1
+                        kubedb.com/kind=MongoDB
+                        kubedb.com/name=mongo-sh
+  Annotations:        <none>
+  Replicas:           824639875108 desired | 3 total
+  Pods Status:        3 Running / 0 Waiting / 0 Succeeded / 0 Failed
+
+StatefulSet:          
+  Name:               mongo-sh-shard1
+  CreationTimestamp:  Wed, 29 Jan 2020 17:36:38 +0600
+  Labels:               app.kubernetes.io/component=database
+                        app.kubernetes.io/instance=mongo-sh
+                        app.kubernetes.io/managed-by=kubedb.com
+                        app.kubernetes.io/name=mongodb
+                        app.kubernetes.io/version=4.1
+                        kubedb.com/kind=MongoDB
+                        kubedb.com/name=mongo-sh
+  Annotations:        <none>
+  Replicas:           824639877300 desired | 3 total
+  Pods Status:        3 Running / 0 Waiting / 0 Succeeded / 0 Failed
+
+StatefulSet:          
+  Name:               mongo-sh-shard2
+  CreationTimestamp:  Wed, 29 Jan 2020 17:36:38 +0600
+  Labels:               app.kubernetes.io/component=database
+                        app.kubernetes.io/instance=mongo-sh
+                        app.kubernetes.io/managed-by=kubedb.com
+                        app.kubernetes.io/name=mongodb
+                        app.kubernetes.io/version=4.1
+                        kubedb.com/kind=MongoDB
+                        kubedb.com/name=mongo-sh
+  Annotations:        <none>
+  Replicas:           824639879764 desired | 3 total
+  Pods Status:        3 Running / 0 Waiting / 0 Succeeded / 0 Failed
+
+Deployment:           
+  Name:               mongo-sh-mongos
+  CreationTimestamp:  Wed, 29 Jan 2020 17:41:14 +0600
+  Labels:               app.kubernetes.io/component=database
+                        app.kubernetes.io/instance=mongo-sh
+                        app.kubernetes.io/managed-by=kubedb.com
+                        app.kubernetes.io/name=mongodb
+                        app.kubernetes.io/version=4.1
+                        kubedb.com/kind=MongoDB
+                        kubedb.com/name=mongo-sh
+  Annotations:          deployment.kubernetes.io/revision=1
+  Replicas:           2 desired | 2 updated | 2 total | 2 available | 0 unavailable
+  Pods Status:        2 Running / 0 Waiting / 0 Succeeded / 0 Failed
+
+Service:        
+  Name:         mongo-sh
+  Labels:         app.kubernetes.io/component=database
+                  app.kubernetes.io/instance=mongo-sh
+                  app.kubernetes.io/managed-by=kubedb.com
+                  app.kubernetes.io/name=mongodb
+                  app.kubernetes.io/version=4.1
+                  kubedb.com/kind=MongoDB
+                  kubedb.com/name=mongo-sh
+  Annotations:  <none>
+  Type:         ClusterIP
+  IP:           10.105.242.203
+  Port:         db  27017/TCP
+  TargetPort:   db/TCP
+  Endpoints:    10.244.1.31:27017,10.244.2.24:27017
+
+Service:        
+  Name:         mongo-sh-configsvr-gvr
+  Labels:         app.kubernetes.io/component=database
+                  app.kubernetes.io/instance=mongo-sh
+                  app.kubernetes.io/managed-by=kubedb.com
+                  app.kubernetes.io/name=mongodb
+                  app.kubernetes.io/version=4.1
+                  kubedb.com/kind=MongoDB
+                  kubedb.com/name=mongo-sh
+  Annotations:    service.alpha.kubernetes.io/tolerate-unready-endpoints=true
+  Type:         ClusterIP
+  IP:           None
+  Port:         db  27017/TCP
+  TargetPort:   27017/TCP
+  Endpoints:    10.244.1.21:27017,10.244.1.29:27017,10.244.2.18:27017
+
+Service:        
+  Name:         mongo-sh-shard0-gvr
+  Labels:         app.kubernetes.io/component=database
+                  app.kubernetes.io/instance=mongo-sh
+                  app.kubernetes.io/managed-by=kubedb.com
+                  app.kubernetes.io/name=mongodb
+                  app.kubernetes.io/version=4.1
+                  kubedb.com/kind=MongoDB
+                  kubedb.com/name=mongo-sh
+  Annotations:    service.alpha.kubernetes.io/tolerate-unready-endpoints=true
+  Type:         ClusterIP
+  IP:           None
+  Port:         db  27017/TCP
+  TargetPort:   27017/TCP
+  Endpoints:    10.244.1.22:27017,10.244.2.19:27017,10.244.2.22:27017
+
+Service:        
+  Name:         mongo-sh-shard1-gvr
+  Labels:         app.kubernetes.io/component=database
+                  app.kubernetes.io/instance=mongo-sh
+                  app.kubernetes.io/managed-by=kubedb.com
+                  app.kubernetes.io/name=mongodb
+                  app.kubernetes.io/version=4.1
+                  kubedb.com/kind=MongoDB
+                  kubedb.com/name=mongo-sh
+  Annotations:    service.alpha.kubernetes.io/tolerate-unready-endpoints=true
+  Type:         ClusterIP
+  IP:           None
+  Port:         db  27017/TCP
+  TargetPort:   27017/TCP
+  Endpoints:    10.244.1.25:27017,10.244.2.14:27017,10.244.2.23:27017
+
+Service:        
+  Name:         mongo-sh-shard2-gvr
+  Labels:         app.kubernetes.io/component=database
+                  app.kubernetes.io/instance=mongo-sh
+                  app.kubernetes.io/managed-by=kubedb.com
+                  app.kubernetes.io/name=mongodb
+                  app.kubernetes.io/version=4.1
+                  kubedb.com/kind=MongoDB
+                  kubedb.com/name=mongo-sh
+  Annotations:    service.alpha.kubernetes.io/tolerate-unready-endpoints=true
+  Type:         ClusterIP
+  IP:           None
+  Port:         db  27017/TCP
+  TargetPort:   27017/TCP
+  Endpoints:    10.244.1.26:27017,10.244.1.30:27017,10.244.2.15:27017
+
+Database Secret:
+  Name:         mongo-sh-auth
+  Labels:         app.kubernetes.io/component=database
+                  app.kubernetes.io/instance=mongo-sh
+                  app.kubernetes.io/managed-by=kubedb.com
+                  app.kubernetes.io/name=mongodb
+                  app.kubernetes.io/version=4.1
+                  kubedb.com/kind=MongoDB
+                  kubedb.com/name=mongo-sh
+  Annotations:  <none>
+  
+Type:  Opaque
+  
+Data
+====
+  password:  16 bytes
+  username:  4 bytes
+
+Events:
+  Type    Reason      Age   From              Message
+  ----    ------      ----  ----              -------
+  Normal  Successful  7m    MongoDB operator  Successfully created stats service
+  Normal  Successful  7m    MongoDB operator  Successfully created stats service
+  Normal  Successful  7m    MongoDB operator  Successfully created stats service
+  Normal  Successful  7m    MongoDB operator  Successfully created stats service
+  Normal  Successful  7m    MongoDB operator  Successfully created Service
+  Normal  Successful  2m    MongoDB operator  Successfully created StatefulSet demo/mongo-sh-shard0
+  Normal  Successful  2m    MongoDB operator  Successfully created StatefulSet demo/mongo-sh-shard1
+  Normal  Successful  2m    MongoDB operator  Successfully created StatefulSet demo/mongo-sh-shard2
+  Normal  Successful  2m    MongoDB operator  Successfully created StatefulSet demo/mongo-sh-configsvr
+  Normal  Successful  2m    MongoDB operator  Successfully created appbinding
+  Normal  Successful  2m    MongoDB operator  Successfully created MongoDB
+  Normal  Successful  2m    MongoDB operator  Successfully created Deployment demo/mongo-sh-mongos
+  Normal  Successful  2m    MongoDB operator  Successfully patched stats service
+  Normal  Successful  2m    MongoDB operator  Successfully patched stats service
+  Normal  Successful  2m    MongoDB operator  Successfully patched stats service
+  Normal  Successful  2m    MongoDB operator  Successfully patched stats service
+  Normal  Successful  2m    MongoDB operator  Successfully patched StatefulSet demo/mongo-sh-shard0
+  Normal  Successful  2m    MongoDB operator  Successfully patched StatefulSet demo/mongo-sh-shard1
+  Normal  Successful  2m    MongoDB operator  Successfully patched StatefulSet demo/mongo-sh-shard2
+  Normal  Successful  2m    MongoDB operator  Successfully patched StatefulSet demo/mongo-sh-configsvr
+  Normal  Successful  2m    MongoDB operator  Successfully patched Deployment demo/mongo-sh-mongos
+  Normal  Successful  2m    MongoDB operator  Successfully patched MongoDB
 ```
 
 `Sharding` and `ConfigServer` nodes are deployed as statefulset.
@@ -115,10 +321,10 @@ mongo-sh   3.6-v3    Running   9m41s
 ```console
 $ kubectl get statefulset -n demo
 NAME                 READY   AGE
-mongo-sh-configsvr   3/3     11m
-mongo-sh-shard0      3/3     10m
-mongo-sh-shard1      3/3     8m59s
-mongo-sh-shard2      3/3     7m45s
+mongo-sh-configsvr   3/3     8m44s
+mongo-sh-shard0      3/3     8m44s
+mongo-sh-shard1      3/3     8m44s
+mongo-sh-shard2      3/3     8m44s
 ```
 
 `Mongos` nodes are deployed as deployment.
@@ -126,7 +332,7 @@ mongo-sh-shard2      3/3     7m45s
 ```console
 $ kubectl get deployments -n demo
 NAME              READY   UP-TO-DATE   AVAILABLE   AGE
-mongo-sh-mongos   2/2     2            2           8m41s
+mongo-sh-mongos   2/2     2            2           4m24s
 ```
 
 All PVCs and PVs for MongoDB `mongo-sh`,
@@ -134,34 +340,33 @@ All PVCs and PVs for MongoDB `mongo-sh`,
 ```console
 $ kubectl get pvc -n demo
 NAME                           STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-datadir-mongo-sh-configsvr-0   Bound    pvc-1db4185e-6a5f-11e9-a871-080027a851ba   1Gi        RWO            standard       16m
-datadir-mongo-sh-configsvr-1   Bound    pvc-330cc6ee-6a5f-11e9-a871-080027a851ba   1Gi        RWO            standard       16m
-datadir-mongo-sh-configsvr-2   Bound    pvc-3db2d3f5-6a5f-11e9-a871-080027a851ba   1Gi        RWO            standard       15m
-datadir-mongo-sh-shard0-0      Bound    pvc-49b7cc3b-6a5f-11e9-a871-080027a851ba   1Gi        RWO            standard       15m
-datadir-mongo-sh-shard0-1      Bound    pvc-5b781770-6a5f-11e9-a871-080027a851ba   1Gi        RWO            standard       15m
-datadir-mongo-sh-shard0-2      Bound    pvc-6ba3263e-6a5f-11e9-a871-080027a851ba   1Gi        RWO            standard       14m
-datadir-mongo-sh-shard1-0      Bound    pvc-75feb227-6a5f-11e9-a871-080027a851ba   1Gi        RWO            standard       14m
-datadir-mongo-sh-shard1-1      Bound    pvc-89bb7bb3-6a5f-11e9-a871-080027a851ba   1Gi        RWO            standard       13m
-datadir-mongo-sh-shard1-2      Bound    pvc-98c96ae4-6a5f-11e9-a871-080027a851ba   1Gi        RWO            standard       13m
-datadir-mongo-sh-shard2-0      Bound    pvc-a1eebcd2-6a5f-11e9-a871-080027a851ba   1Gi        RWO            standard       13m
-datadir-mongo-sh-shard2-1      Bound    pvc-b231fb18-6a5f-11e9-a871-080027a851ba   1Gi        RWO            standard       12m
-datadir-mongo-sh-shard2-2      Bound    pvc-c5bb265f-6a5f-11e9-a871-080027a851ba   1Gi        RWO            standard       12m
-
+datadir-mongo-sh-configsvr-0   Bound    pvc-c317d4fb-12eb-4f59-94e5-a2d863272927   1Gi        RWO            standard       9m12s
+datadir-mongo-sh-configsvr-1   Bound    pvc-45b60ac4-6d27-4f6d-b4b6-cdd20ceac074   1Gi        RWO            standard       8m6s
+datadir-mongo-sh-configsvr-2   Bound    pvc-b170e9b6-e391-4001-b4b7-252a7420dd69   1Gi        RWO            standard       6m1s
+datadir-mongo-sh-shard0-0      Bound    pvc-df98d0b6-263b-4bb4-9be9-549dcc2aa885   1Gi        RWO            standard       9m12s
+datadir-mongo-sh-shard0-1      Bound    pvc-b91048d6-b5a7-4ae9-9b26-92403bb960c2   1Gi        RWO            standard       7m49s
+datadir-mongo-sh-shard0-2      Bound    pvc-ce5a93d0-d0a6-4bbf-a2ee-db16de935fff   1Gi        RWO            standard       6m1s
+datadir-mongo-sh-shard1-0      Bound    pvc-d0fdc856-6848-40f8-adcb-e60eee102124   1Gi        RWO            standard       9m12s
+datadir-mongo-sh-shard1-1      Bound    pvc-507a6b1e-497a-453f-9353-c11ba7a0f805   1Gi        RWO            standard       7m34s
+datadir-mongo-sh-shard1-2      Bound    pvc-4210d0aa-12de-4f9a-999b-da1893fd10e2   1Gi        RWO            standard       6m1s
+datadir-mongo-sh-shard2-0      Bound    pvc-c44e5940-6622-49be-8355-1f9aeac651d2   1Gi        RWO            standard       9m12s
+datadir-mongo-sh-shard2-1      Bound    pvc-63f0b4be-0e9b-41e9-ae2b-229dfe51477c   1Gi        RWO            standard       7m33s
+datadir-mongo-sh-shard2-2      Bound    pvc-d60001d6-b3a5-4952-93a6-c37ac541a916   1Gi        RWO            standard       6m1s
 
 $ kubectl get pv -n demo
 NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                               STORAGECLASS   REASON   AGE
-pvc-1db4185e-6a5f-11e9-a871-080027a851ba   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-configsvr-0   standard                17m
-pvc-330cc6ee-6a5f-11e9-a871-080027a851ba   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-configsvr-1   standard                16m
-pvc-3db2d3f5-6a5f-11e9-a871-080027a851ba   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-configsvr-2   standard                16m
-pvc-49b7cc3b-6a5f-11e9-a871-080027a851ba   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard0-0      standard                16m
-pvc-5b781770-6a5f-11e9-a871-080027a851ba   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard0-1      standard                15m
-pvc-6ba3263e-6a5f-11e9-a871-080027a851ba   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard0-2      standard                15m
-pvc-75feb227-6a5f-11e9-a871-080027a851ba   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard1-0      standard                14m
-pvc-89bb7bb3-6a5f-11e9-a871-080027a851ba   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard1-1      standard                14m
-pvc-98c96ae4-6a5f-11e9-a871-080027a851ba   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard1-2      standard                13m
-pvc-a1eebcd2-6a5f-11e9-a871-080027a851ba   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard2-0      standard                13m
-pvc-b231fb18-6a5f-11e9-a871-080027a851ba   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard2-1      standard                13m
-pvc-c5bb265f-6a5f-11e9-a871-080027a851ba   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard2-2      standard                12m
+pvc-4210d0aa-12de-4f9a-999b-da1893fd10e2   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard1-2      standard                6m8s
+pvc-45b60ac4-6d27-4f6d-b4b6-cdd20ceac074   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-configsvr-1   standard                7m55s
+pvc-507a6b1e-497a-453f-9353-c11ba7a0f805   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard1-1      standard                7m42s
+pvc-63f0b4be-0e9b-41e9-ae2b-229dfe51477c   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard2-1      standard                7m39s
+pvc-b170e9b6-e391-4001-b4b7-252a7420dd69   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-configsvr-2   standard                6m9s
+pvc-b91048d6-b5a7-4ae9-9b26-92403bb960c2   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard0-1      standard                7m53s
+pvc-c317d4fb-12eb-4f59-94e5-a2d863272927   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-configsvr-0   standard                9m19s
+pvc-c44e5940-6622-49be-8355-1f9aeac651d2   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard2-0      standard                9m18s
+pvc-ce5a93d0-d0a6-4bbf-a2ee-db16de935fff   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard0-2      standard                6m9s
+pvc-d0fdc856-6848-40f8-adcb-e60eee102124   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard1-0      standard                9m20s
+pvc-d60001d6-b3a5-4952-93a6-c37ac541a916   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard2-2      standard                6m8s
+pvc-df98d0b6-263b-4bb4-9be9-549dcc2aa885   1Gi        RWO            Delete           Bound    demo/datadir-mongo-sh-shard0-0      standard                9m19s
 ```
 
 Services created for MongoDB `mongo-sh`
@@ -169,11 +374,11 @@ Services created for MongoDB `mongo-sh`
 ```console
 $ kubectl get svc -n demo
 NAME                     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)     AGE
-mongo-sh                 ClusterIP   10.108.188.201   <none>        27017/TCP   18m
-mongo-sh-configsvr-gvr   ClusterIP   None             <none>        27017/TCP   18m
-mongo-sh-shard0-gvr      ClusterIP   None             <none>        27017/TCP   18m
-mongo-sh-shard1-gvr      ClusterIP   None             <none>        27017/TCP   18m
-mongo-sh-shard2-gvr      ClusterIP   None             <none>        27017/TCP   18m
+mongo-sh                 ClusterIP   10.105.242.203   <none>        27017/TCP   9m40s
+mongo-sh-configsvr-gvr   ClusterIP   None             <none>        27017/TCP   9m41s
+mongo-sh-shard0-gvr      ClusterIP   None             <none>        27017/TCP   9m41s
+mongo-sh-shard1-gvr      ClusterIP   None             <none>        27017/TCP   9m41s
+mongo-sh-shard2-gvr      ClusterIP   None             <none>        27017/TCP   9m41s
 ```
 
 KubeDB operator sets the `status.phase` to `Running` once the database is successfully created. It has also defaulted some field of crd object. Run the following command to see the modified MongoDB object:
@@ -183,18 +388,19 @@ $ kubedb get mg -n demo mongo-sh -o yaml
 apiVersion: kubedb.com/v1alpha1
 kind: MongoDB
 metadata:
-  creationTimestamp: "2019-04-29T09:13:56Z"
+  creationTimestamp: "2020-01-29T11:36:37Z"
   finalizers:
   - kubedb.com
   generation: 3
   name: mongo-sh
   namespace: demo
-  resourceVersion: "25825"
+  resourceVersion: "42648"
   selfLink: /apis/kubedb.com/v1alpha1/namespaces/demo/mongodbs/mongo-sh
-  uid: 1d83622c-6a5f-11e9-a871-080027a851ba
+  uid: 5110faf5-945c-4917-b7f4-227014dbd05b
 spec:
   certificateSecret:
-    secretName: mongo-sh-keyfile
+    secretName: mongo-sh-cert
+  clusterAuthMode: keyFile
   databaseSecret:
     secretName: mongo-sh-auth
   serviceTemplate:
@@ -206,12 +412,38 @@ spec:
         controller: {}
         metadata: {}
         spec:
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      kubedb.com/kind: MongoDB
+                      kubedb.com/name: mongo-sh
+                      mongodb.kubedb.com/node.config: mongo-sh-configsvr
+                  namespaces:
+                  - demo
+                  topologyKey: kubernetes.io/hostname
+                weight: 100
+              - podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      kubedb.com/kind: MongoDB
+                      kubedb.com/name: mongo-sh
+                      mongodb.kubedb.com/node.config: mongo-sh-configsvr
+                  namespaces:
+                  - demo
+                  topologyKey: failure-domain.beta.kubernetes.io/zone
+                weight: 50
           livenessProbe:
             exec:
               command:
-              - mongo
-              - --eval
-              - db.adminCommand('ping')
+              - bash
+              - -c
+              - "if [[ $(mongo admin --host=localhost  --username=$MONGO_INITDB_ROOT_USERNAME
+                --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin
+                --quiet --eval \"db.adminCommand('ping').ok\" ) -eq \"1\" ]]; then
+                \n          exit 0\n        fi\n        exit 1"
             failureThreshold: 3
             periodSeconds: 10
             successThreshold: 1
@@ -219,21 +451,20 @@ spec:
           readinessProbe:
             exec:
               command:
-              - mongo
-              - --eval
-              - db.adminCommand('ping')
+              - bash
+              - -c
+              - "if [[ $(mongo admin --host=localhost  --username=$MONGO_INITDB_ROOT_USERNAME
+                --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin
+                --quiet --eval \"db.adminCommand('ping').ok\" ) -eq \"1\" ]]; then
+                \n          exit 0\n        fi\n        exit 1"
             failureThreshold: 3
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
           resources: {}
-          securityContext:
-            fsGroup: 999
-            runAsNonRoot: true
-            runAsUser: 999
+          serviceAccountName: mongo-sh
       replicas: 3
       storage:
-        dataSource: null
         resources:
           requests:
             storage: 1Gi
@@ -243,12 +474,38 @@ spec:
         controller: {}
         metadata: {}
         spec:
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      kubedb.com/kind: MongoDB
+                      kubedb.com/name: mongo-sh
+                      mongodb.kubedb.com/node.mongos: mongo-sh-mongos
+                  namespaces:
+                  - demo
+                  topologyKey: kubernetes.io/hostname
+                weight: 100
+              - podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      kubedb.com/kind: MongoDB
+                      kubedb.com/name: mongo-sh
+                      mongodb.kubedb.com/node.mongos: mongo-sh-mongos
+                  namespaces:
+                  - demo
+                  topologyKey: failure-domain.beta.kubernetes.io/zone
+                weight: 50
           livenessProbe:
             exec:
               command:
-              - mongo
-              - --eval
-              - db.adminCommand('ping')
+              - bash
+              - -c
+              - "if [[ $(mongo admin --host=localhost  --username=$MONGO_INITDB_ROOT_USERNAME
+                --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin
+                --quiet --eval \"db.adminCommand('ping').ok\" ) -eq \"1\" ]]; then
+                \n          exit 0\n        fi\n        exit 1"
             failureThreshold: 3
             periodSeconds: 10
             successThreshold: 1
@@ -256,18 +513,18 @@ spec:
           readinessProbe:
             exec:
               command:
-              - mongo
-              - --eval
-              - db.adminCommand('ping')
+              - bash
+              - -c
+              - "if [[ $(mongo admin --host=localhost  --username=$MONGO_INITDB_ROOT_USERNAME
+                --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin
+                --quiet --eval \"db.adminCommand('ping').ok\" ) -eq \"1\" ]]; then
+                \n          exit 0\n        fi\n        exit 1"
             failureThreshold: 3
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
           resources: {}
-          securityContext:
-            fsGroup: 999
-            runAsNonRoot: true
-            runAsUser: 999
+          serviceAccountName: mongo-sh
       replicas: 2
       strategy:
         type: RollingUpdate
@@ -276,12 +533,38 @@ spec:
         controller: {}
         metadata: {}
         spec:
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      kubedb.com/kind: MongoDB
+                      kubedb.com/name: mongo-sh
+                      mongodb.kubedb.com/node.shard: mongo-sh-shard${SHARD_INDEX}
+                  namespaces:
+                  - demo
+                  topologyKey: kubernetes.io/hostname
+                weight: 100
+              - podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      kubedb.com/kind: MongoDB
+                      kubedb.com/name: mongo-sh
+                      mongodb.kubedb.com/node.shard: mongo-sh-shard${SHARD_INDEX}
+                  namespaces:
+                  - demo
+                  topologyKey: failure-domain.beta.kubernetes.io/zone
+                weight: 50
           livenessProbe:
             exec:
               command:
-              - mongo
-              - --eval
-              - db.adminCommand('ping')
+              - bash
+              - -c
+              - "if [[ $(mongo admin --host=localhost  --username=$MONGO_INITDB_ROOT_USERNAME
+                --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin
+                --quiet --eval \"db.adminCommand('ping').ok\" ) -eq \"1\" ]]; then
+                \n          exit 0\n        fi\n        exit 1"
             failureThreshold: 3
             periodSeconds: 10
             successThreshold: 1
@@ -289,33 +572,33 @@ spec:
           readinessProbe:
             exec:
               command:
-              - mongo
-              - --eval
-              - db.adminCommand('ping')
+              - bash
+              - -c
+              - "if [[ $(mongo admin --host=localhost  --username=$MONGO_INITDB_ROOT_USERNAME
+                --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin
+                --quiet --eval \"db.adminCommand('ping').ok\" ) -eq \"1\" ]]; then
+                \n          exit 0\n        fi\n        exit 1"
             failureThreshold: 3
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
           resources: {}
-          securityContext:
-            fsGroup: 999
-            runAsNonRoot: true
-            runAsUser: 999
+          serviceAccountName: mongo-sh
       replicas: 3
       shards: 3
       storage:
-        dataSource: null
         resources:
           requests:
             storage: 1Gi
         storageClassName: standard
+  sslMode: disabled
   storageType: Durable
-  terminationPolicy: Halt
+  terminationPolicy: Delete
   updateStrategy:
     type: RollingUpdate
   version: "4.1"
 status:
-  observedGeneration: 3$4212299729528774793
+  observedGeneration: 3
   phase: Running
 ```
 

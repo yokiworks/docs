@@ -34,7 +34,7 @@ aliases:
 ## Life Cycle of a MongoDB Object
 
 <p align="center">
-  <img alt="lifecycle"  src="/docs/images/mongodb/mgo-lifecycle.svg">
+  <img alt="lifecycle"  src="/docs/images/mongodb/mgo-lifecycle.png">
 </p>
 
 ## Supported MongoDB Versions

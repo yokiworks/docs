@@ -78,10 +78,16 @@ Here,
 KubeDB operator watches for `MongoDB` objects using Kubernetes api. When a `MongoDB` object is created, KubeDB operator will create a new StatefulSet and a Service with the matching MongoDB object name. KubeDB operator will also create a governing service for StatefulSets with the name `<mongodb-name>-gvr`.
 
 ```console
+$ kubectl get mongodb -n demo
+NAME             VERSION   STATUS    AGE
+mgo-replicaset   4.1       Running   3m13s
+```
+
+```console
 $ kubedb describe mg -n demo mgo-replicaset
 Name:               mgo-replicaset
 Namespace:          demo
-CreationTimestamp:  Wed, 06 Feb 2019 16:08:15 +0600
+CreationTimestamp:  Wed, 29 Jan 2020 17:10:01 +0600
 Labels:             <none>
 Annotations:        <none>
 Replicas:           3  total
@@ -92,40 +98,60 @@ Volume:
   Capacity:      1Gi
   Access Modes:  RWO
 
-StatefulSet:
+StatefulSet:          
   Name:               mgo-replicaset
-  CreationTimestamp:  Wed, 06 Feb 2019 16:08:15 +0600
-  Labels:               kubedb.com/kind=MongoDB
+  CreationTimestamp:  Wed, 29 Jan 2020 17:10:03 +0600
+  Labels:               app.kubernetes.io/component=database
+                        app.kubernetes.io/instance=mgo-replicaset
+                        app.kubernetes.io/managed-by=kubedb.com
+                        app.kubernetes.io/name=mongodb
+                        app.kubernetes.io/version=4.1
+                        kubedb.com/kind=MongoDB
                         kubedb.com/name=mgo-replicaset
   Annotations:        <none>
-  Replicas:           824637261744 desired | 3 total
+  Replicas:           824639242716 desired | 3 total
   Pods Status:        3 Running / 0 Waiting / 0 Succeeded / 0 Failed
 
-Service:
+Service:        
   Name:         mgo-replicaset
-  Labels:         kubedb.com/kind=MongoDB
+  Labels:         app.kubernetes.io/component=database
+                  app.kubernetes.io/instance=mgo-replicaset
+                  app.kubernetes.io/managed-by=kubedb.com
+                  app.kubernetes.io/name=mongodb
+                  app.kubernetes.io/version=4.1
+                  kubedb.com/kind=MongoDB
                   kubedb.com/name=mgo-replicaset
   Annotations:  <none>
   Type:         ClusterIP
-  IP:           10.97.174.220
+  IP:           10.104.249.236
   Port:         db  27017/TCP
   TargetPort:   db/TCP
-  Endpoints:    172.17.0.7:27017,172.17.0.8:27017,172.17.0.9:27017
+  Endpoints:    10.244.1.11:27017,10.244.2.5:27017,10.244.2.7:27017
 
-Service:
+Service:        
   Name:         mgo-replicaset-gvr
-  Labels:         kubedb.com/kind=MongoDB
+  Labels:         app.kubernetes.io/component=database
+                  app.kubernetes.io/instance=mgo-replicaset
+                  app.kubernetes.io/managed-by=kubedb.com
+                  app.kubernetes.io/name=mongodb
+                  app.kubernetes.io/version=4.1
+                  kubedb.com/kind=MongoDB
                   kubedb.com/name=mgo-replicaset
   Annotations:    service.alpha.kubernetes.io/tolerate-unready-endpoints=true
   Type:         ClusterIP
   IP:           None
   Port:         db  27017/TCP
   TargetPort:   27017/TCP
-  Endpoints:    172.17.0.7:27017,172.17.0.8:27017,172.17.0.9:27017
+  Endpoints:    10.244.1.11:27017,10.244.2.5:27017,10.244.2.7:27017
 
 Database Secret:
   Name:         mgo-replicaset-auth
-  Labels:         kubedb.com/kind=MongoDB
+  Labels:         app.kubernetes.io/component=database
+                  app.kubernetes.io/instance=mgo-replicaset
+                  app.kubernetes.io/managed-by=kubedb.com
+                  app.kubernetes.io/name=mongodb
+                  app.kubernetes.io/version=4.1
+                  kubedb.com/kind=MongoDB
                   kubedb.com/name=mgo-replicaset
   Annotations:  <none>
   
@@ -133,42 +159,43 @@ Type:  Opaque
   
 Data
 ====
-  password:  16 bytes
   username:  4 bytes
-
-No Snapshots.
+  password:  16 bytes
 
 Events:
-  Type    Reason      Age   From             Message
-  ----    ------      ----  ----             -------
-  Normal  Successful  1m    KubeDB operator  Successfully created Service
-  Normal  Successful  26s   KubeDB operator  Successfully created StatefulSet
-  Normal  Successful  26s   KubeDB operator  Successfully created MongoDB
-  Normal  Successful  26s   KubeDB operator  Successfully created appbinding
-  Normal  Successful  26s   KubeDB operator  Successfully patched StatefulSet
-  Normal  Successful  26s   KubeDB operator  Successfully patched MongoDB
+  Type    Reason      Age   From              Message
+  ----    ------      ----  ----              -------
+  Normal  Successful  3m    MongoDB operator  Successfully created stats service
+  Normal  Successful  3m    MongoDB operator  Successfully created Service
+  Normal  Successful  16s   MongoDB operator  Successfully created StatefulSet demo/mgo-replicaset
+  Normal  Successful  16s   MongoDB operator  Successfully created MongoDB
+  Normal  Successful  16s   MongoDB operator  Successfully created appbinding
+  Normal  Successful  16s   MongoDB operator  Successfully patched stats service
+  Normal  Successful  16s   MongoDB operator  Successfully patched StatefulSet demo/mgo-replicaset
+  Normal  Successful  16s   MongoDB operator  Successfully patched MongoDB
+```
 
-
+```console
 $ kubectl get statefulset -n demo
 NAME             READY   AGE
-mgo-replicaset   3/3     105s
+mgo-replicaset   3/3     3m51s
 
 $ kubectl get pvc -n demo
-NAME                       STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-datadir-mgo-replicaset-0   Bound     pvc-597784c9-c093-11e8-b4a9-0800272618ed   1Gi        RWO            standard       1h
-datadir-mgo-replicaset-1   Bound     pvc-8ca7a9d9-c093-11e8-b4a9-0800272618ed   1Gi        RWO            standard       1h
-datadir-mgo-replicaset-2   Bound     pvc-b7d8a624-c093-11e8-b4a9-0800272618ed   1Gi        RWO            standard       1h
+NAME                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+datadir-mgo-replicaset-0   Bound    pvc-0d1b263d-9e04-4451-8cae-00bfd3713f66   1Gi        RWO            standard       4m
+datadir-mgo-replicaset-1   Bound    pvc-46dfe664-d35c-4382-b312-547861192505   1Gi        RWO            standard       3m21s
+datadir-mgo-replicaset-2   Bound    pvc-a2307675-fe38-48c1-bbe1-b8c56af7df8a   1Gi        RWO            standard       96s
 
 $ kubectl get pv -n demo
-NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                           STORAGECLASS   REASON    AGE
-pvc-597784c9-c093-11e8-b4a9-0800272618ed   1Gi        RWO            Delete           Bound     demo/datadir-mgo-replicaset-0   standard                 1h
-pvc-8ca7a9d9-c093-11e8-b4a9-0800272618ed   1Gi        RWO            Delete           Bound     demo/datadir-mgo-replicaset-1   standard                 1h
-pvc-b7d8a624-c093-11e8-b4a9-0800272618ed   1Gi        RWO            Delete           Bound     demo/datadir-mgo-replicaset-2   standard                 1h
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                           STORAGECLASS   REASON   AGE
+pvc-0d1b263d-9e04-4451-8cae-00bfd3713f66   1Gi        RWO            Delete           Bound    demo/datadir-mgo-replicaset-0   standard                4m9s
+pvc-46dfe664-d35c-4382-b312-547861192505   1Gi        RWO            Delete           Bound    demo/datadir-mgo-replicaset-1   standard                3m23s
+pvc-a2307675-fe38-48c1-bbe1-b8c56af7df8a   1Gi        RWO            Delete           Bound    demo/datadir-mgo-replicaset-2   standard                105s
 
 $ kubectl get service -n demo
-NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)     AGE
-mgo-replicaset       ClusterIP   10.97.174.220   <none>        27017/TCP   119s
-mgo-replicaset-gvr   ClusterIP   None            <none>        27017/TCP   119s
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)     AGE
+mgo-replicaset       ClusterIP   10.104.249.236   <none>        27017/TCP   4m21s
+mgo-replicaset-gvr   ClusterIP   None             <none>        27017/TCP   4m21s
 ```
 
 KubeDB operator sets the `status.phase` to `Running` once the database is successfully created. Run the following command to see the modified MongoDB object:
@@ -178,30 +205,55 @@ $ kubedb get mg -n demo mgo-replicaset -o yaml
 apiVersion: kubedb.com/v1alpha1
 kind: MongoDB
 metadata:
-  creationTimestamp: "2019-04-30T09:45:14Z"
+  creationTimestamp: "2020-01-29T11:10:01Z"
   finalizers:
   - kubedb.com
   generation: 3
   name: mgo-replicaset
   namespace: demo
-  resourceVersion: "30485"
+  resourceVersion: "38302"
   selfLink: /apis/kubedb.com/v1alpha1/namespaces/demo/mongodbs/mgo-replicaset
-  uid: a7aa351c-6b2c-11e9-97a6-0800278b6754
+  uid: b48140ff-f95e-46bd-8acb-15005b6677c6
 spec:
   certificateSecret:
-    secretName: mgo-replicaset-keyfile
+    secretName: mgo-replicaset-cert
+  clusterAuthMode: keyFile
   databaseSecret:
     secretName: mgo-replicaset-auth
   podTemplate:
     controller: {}
     metadata: {}
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  kubedb.com/kind: MongoDB
+                  kubedb.com/name: mgo-replicaset
+              namespaces:
+              - demo
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  kubedb.com/kind: MongoDB
+                  kubedb.com/name: mgo-replicaset
+              namespaces:
+              - demo
+              topologyKey: failure-domain.beta.kubernetes.io/zone
+            weight: 50
       livenessProbe:
         exec:
           command:
-          - mongo
-          - --eval
-          - db.adminCommand('ping')
+          - bash
+          - -c
+          - "if [[ $(mongo admin --host=localhost  --username=$MONGO_INITDB_ROOT_USERNAME
+            --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin
+            --quiet --eval \"db.adminCommand('ping').ok\" ) -eq \"1\" ]]; then \n
+            \         exit 0\n        fi\n        exit 1"
         failureThreshold: 3
         periodSeconds: 10
         successThreshold: 1
@@ -209,39 +261,39 @@ spec:
       readinessProbe:
         exec:
           command:
-          - mongo
-          - --eval
-          - db.adminCommand('ping')
+          - bash
+          - -c
+          - "if [[ $(mongo admin --host=localhost  --username=$MONGO_INITDB_ROOT_USERNAME
+            --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin
+            --quiet --eval \"db.adminCommand('ping').ok\" ) -eq \"1\" ]]; then \n
+            \         exit 0\n        fi\n        exit 1"
         failureThreshold: 3
         periodSeconds: 10
         successThreshold: 1
         timeoutSeconds: 1
       resources: {}
-      securityContext:
-        fsGroup: 999
-        runAsNonRoot: true
-        runAsUser: 999
+      serviceAccountName: mgo-replicaset
   replicaSet:
     name: rs0
   replicas: 3
   serviceTemplate:
     metadata: {}
     spec: {}
+  sslMode: disabled
   storage:
     accessModes:
     - ReadWriteOnce
-    dataSource: null
     resources:
       requests:
         storage: 1Gi
     storageClassName: standard
   storageType: Durable
-  terminationPolicy: Halt
+  terminationPolicy: Delete
   updateStrategy:
     type: RollingUpdate
   version: "4.1"
 status:
-  observedGeneration: 3$4212299729528774793
+  observedGeneration: 3
   phase: Running
 ```
 
@@ -260,11 +312,11 @@ $ kubectl get secrets -n demo mgo-replicaset-auth -o jsonpath='{.data.\username}
 root
 
 $ kubectl get secrets -n demo mgo-replicaset-auth -o jsonpath='{.data.\password}' | base64 -d
-5O4R2ze2bWXcWsdP
+2wT7CfFt_KDEdYww
 
 $ kubectl exec -it mgo-replicaset-0 -n demo bash
 
-mongodb@mgo-replicaset-0:/$ mongo admin -u root -p 5O4R2ze2bWXcWsdP
+mongodb@mgo-replicaset-0:/$ mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD
 MongoDB shell version v3.6.6
 connecting to: mongodb://127.0.0.1:27017/admin
 MongoDB server version: 3.6.6
@@ -281,6 +333,7 @@ local   0.000GB
 rs0:PRIMARY> show users
 {
 	"_id" : "admin.root",
+	"userId" : UUID("faa9d5bc-e713-4f7e-8d4b-3a90ea258faf"),
 	"user" : "root",
 	"db" : "admin",
 	"roles" : [
@@ -288,9 +341,12 @@ rs0:PRIMARY> show users
 			"role" : "root",
 			"db" : "admin"
 		}
+	],
+	"mechanisms" : [
+		"SCRAM-SHA-1",
+		"SCRAM-SHA-256"
 	]
 }
-
 
 rs0:PRIMARY> use newdb
 switched to db newdb
@@ -310,11 +366,7 @@ We will exec in `mgo-replicaset-1`(which is secondary member right now) to check
 
 ```console
 $ kubectl exec -it mgo-replicaset-1 -n demo bash
-mongodb@mgo-replicaset-1:/$ mongo admin -u root -p 5O4R2ze2bWXcWsdP
-MongoDB shell version v3.6.6
-connecting to: mongodb://127.0.0.1:27017/admin
-MongoDB server version: 3.6.6
-Welcome to the MongoDB shell.
+mongodb@mgo-replicaset-1:/$ mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD
 
 rs0:SECONDARY> rs.slaveOk()
 rs0:SECONDARY> > show dbs
@@ -326,6 +378,7 @@ newdb   0.000GB
 rs0:SECONDARY> show users
 {
 	"_id" : "admin.root",
+	"userId" : UUID("faa9d5bc-e713-4f7e-8d4b-3a90ea258faf"),
 	"user" : "root",
 	"db" : "admin",
 	"roles" : [
@@ -333,6 +386,10 @@ rs0:SECONDARY> show users
 			"role" : "root",
 			"db" : "admin"
 		}
+	],
+	"mechanisms" : [
+		"SCRAM-SHA-1",
+		"SCRAM-SHA-256"
 	]
 }
 
@@ -373,7 +430,7 @@ Now verify the automatic failover, Let's exec in `mgo-replicaset-1` pod,
 
 ```console
 $ kubectl exec -it mgo-replicaset-1 -n demo bash
-mongodb@mgo-replicaset-1:/$ mongo admin -u root -p 5O4R2ze2bWXcWsdP
+mongodb@mgo-replicaset-1:/$ mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD
 MongoDB shell version v3.6.6
 connecting to: mongodb://127.0.0.1:27017/admin
 MongoDB server version: 3.6.6
@@ -393,6 +450,7 @@ newdb   0.000GB
 rs0:SECONDARY> show users
 {
 	"_id" : "admin.root",
+	"userId" : UUID("faa9d5bc-e713-4f7e-8d4b-3a90ea258faf"),
 	"user" : "root",
 	"db" : "admin",
 	"roles" : [
@@ -400,6 +458,10 @@ rs0:SECONDARY> show users
 			"role" : "root",
 			"db" : "admin"
 		}
+	],
+	"mechanisms" : [
+		"SCRAM-SHA-1",
+		"SCRAM-SHA-256"
 	]
 }
 
@@ -410,156 +472,141 @@ rs0:SECONDARY> db.movie.find().pretty()
 { "_id" : ObjectId("5b5efeea9d097ca0600694a3"), "name" : "batman" }
 ```
 
-## Pause Database
+## Halt Database
 
-When `terminationPolicy` is `DoNotTerminate`, KubeDB takes advantage of `ValidationWebhook` feature in Kubernetes 1.9.0 or later clusters to implement `DoNotTerminate` feature. If admission webhook is enabled, It prevents users from deleting the database as long as the `spec.terminationPolicy` is set to `DoNotTerminate`.
+User can halt the database by setting `spec.halted` to `true`. As the name suggests, this will halt the database by deleting all the kubernetes resources (including `sts`, `services`, rbac resources, etc) except `secrets` and `PVCs`. On the other hand, when users wishes to resume a halted database, they will need to set `spec.halted` to `false`.
 
-Since the MongoDB object created in this tutorial has `spec.terminationPolicy` set to `Pause` (default), if you delete the MongoDB object, KubeDB operator will create a dormant database while deleting the StatefulSet and its pods but leaves the PVCs unchanged.
+Please Note that, if [spec.terminationPolicy](/docs/concepts/databases/mongodb.md#specterminationpolicy) is set to `DoNotTerminate`, the halt database operation will fail with forbidden error message from admission controller. 
 
-```console
-$ kubedb delete mg mgo-replicaset -n demo
-mongodb.kubedb.com "mgo-replicaset" deleted
+If [spec.terminationPolicy](/docs/concepts/databases/mongodb.md#specterminationpolicy) is not set to `DoNotTerminate`, then kubedb will accept the user's halt request and also it will update the `spec.terminationPolicy` to `Halt`.
 
-$ kubedb get drmn -n demo mgo-replicaset
-NAME             STATUS    AGE
-mgo-replicaset   Pausing   25s
-
-$ kubedb get drmn -n demo mgo-replicaset
-NAME             STATUS    AGE
-mgo-replicaset   Paused    1m
-```
-
-```yaml
-$ kubedb get drmn -n demo mgo-replicaset -o yaml
-apiVersion: kubedb.com/v1alpha1
-kind: DormantDatabase
-metadata:
-  creationTimestamp: "2019-04-30T09:48:12Z"
-  finalizers:
-  - kubedb.com
-  generation: 1
-  labels:
-    kubedb.com/kind: MongoDB
-  name: mgo-replicaset
-  namespace: demo
-  resourceVersion: "30679"
-  selfLink: /apis/kubedb.com/v1alpha1/namespaces/demo/dormantdatabases/mgo-replicaset
-  uid: 11b04c13-6b2d-11e9-97a6-0800278b6754
-spec:
-  origin:
-    metadata:
-      creationTimestamp: "2019-04-30T09:45:14Z"
-      name: mgo-replicaset
-      namespace: demo
-    spec:
-      mongodb:
-        certificateSecret:
-          secretName: mgo-replicaset-keyfile
-        databaseSecret:
-          secretName: mgo-replicaset-auth
-        podTemplate:
-          controller: {}
-          metadata: {}
-          spec:
-            livenessProbe:
-              exec:
-                command:
-                - mongo
-                - --eval
-                - db.adminCommand('ping')
-              failureThreshold: 3
-              periodSeconds: 10
-              successThreshold: 1
-              timeoutSeconds: 5
-            readinessProbe:
-              exec:
-                command:
-                - mongo
-                - --eval
-                - db.adminCommand('ping')
-              failureThreshold: 3
-              periodSeconds: 10
-              successThreshold: 1
-              timeoutSeconds: 1
-            resources: {}
-            securityContext:
-              fsGroup: 999
-              runAsNonRoot: true
-              runAsUser: 999
-        replicaSet:
-          name: rs0
-        replicas: 3
-        serviceTemplate:
-          metadata: {}
-          spec: {}
-        storage:
-          accessModes:
-          - ReadWriteOnce
-          dataSource: null
-          resources:
-            requests:
-              storage: 1Gi
-          storageClassName: standard
-        storageType: Durable
-        terminationPolicy: Halt
-        updateStrategy:
-          type: RollingUpdate
-        version: "4.1"
-status:
-  observedGeneration: 1$16440556888999634490
-  pausingTime: "2019-04-30T09:48:24Z"
-  phase: Paused
-```
-
-Here,
-
-- `spec.origin` is the spec of the original spec of the original MongoDB object.
-- `status.phase` points to the current database state `Paused`.
-
-## Resume Dormant Database
-
-To resume the database from the dormant state, create same `MongoDB` object with same Spec.
-
-In this tutorial, the dormant database can be resumed by creating original MongoDB object.
-
-The below command will resume the DormantDatabase `mgo-replicaset`.
+Set `spec.halted` to `true`.
 
 ```console
-$ kubectl create -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/mongodb/clustering/demo-1.yaml
-mongodb.kubedb.com/mgo-replicaset created
+$ kubectl patch -n demo mg/mgo-replicaset -p '{"spec":{"halted":true}}' --type="merge"
+mongodb.kubedb.com/mgo-replicaset patched
 ```
 
-Now, If you again exec into `pod` and look for previous data, you will see that, all the data persists.
+Database status will be set to `Halted` after successful deletion of kubernetes resources.
+
+```console
+$ kubectl get mongodb -n demo
+NAME             VERSION   STATUS   AGE
+mgo-replicaset   4.1       Halted   30m
+```
+
+```console
+$ kubedb describe mg -n demo mgo-replicaset
+Name:               mgo-replicaset
+Namespace:          demo
+CreationTimestamp:  Wed, 29 Jan 2020 17:10:01 +0600
+Labels:             <none>
+Annotations:        <none>
+Replicas:           3  total
+Status:             Halted
+  StorageType:      Durable
+Volume:
+  StorageClass:  standard
+  Capacity:      1Gi
+  Access Modes:  RWO
+
+Database Secret:
+  Name:         mgo-replicaset-auth
+  Labels:         app.kubernetes.io/component=database
+                  app.kubernetes.io/instance=mgo-replicaset
+                  app.kubernetes.io/managed-by=kubedb.com
+                  app.kubernetes.io/name=mongodb
+                  app.kubernetes.io/version=4.1
+                  kubedb.com/kind=MongoDB
+                  kubedb.com/name=mgo-replicaset
+  Annotations:  <none>
+  
+Type:  Opaque
+  
+Data
+====
+  password:  16 bytes
+  username:  4 bytes
+
+Events:
+  Type    Reason      Age   From              Message
+  ----    ------      ----  ----              -------
+  Normal  Successful  18m   MongoDB operator  Successfully created stats service
+  Normal  Successful  18m   MongoDB operator  Successfully created Service
+  Normal  Successful  15m   MongoDB operator  Successfully created StatefulSet demo/mgo-replicaset
+  Normal  Successful  15m   MongoDB operator  Successfully created MongoDB
+  Normal  Successful  15m   MongoDB operator  Successfully created appbinding
+  Normal  Successful  15m   MongoDB operator  Successfully patched stats service
+  Normal  Successful  15m   MongoDB operator  Successfully patched StatefulSet demo/mgo-replicaset
+  Normal  Successful  15m   MongoDB operator  Successfully patched MongoDB
+```
+
+## Resume Database
+
+To resume the database, set `spec.halted` to `false`.
+
+```console
+$ kubectl patch -n demo mg/mgo-replicaset -p '{"spec":{"halted":false}}' --type="merge"
+mongodb.kubedb.com/mgo-replicaset patched
+```
+
+```console
+$ kubectl get mongodb -n demo
+NAME             VERSION   STATUS    AGE
+mgo-replicaset   4.1       Running   21m
+```
+
+Now, if you exec into the database, you can see that the datas are intact.
+
+```console
+$ kubectl exec -it mgo-replicaset-0 -n demo bash
+root@mgo-replicaset-0:/# mongo admin --username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD
+
+rs0:PRIMARY> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+newdb   0.000GB
+
+rs0:PRIMARY> show users
+{
+	"_id" : "admin.root",
+	"userId" : UUID("faa9d5bc-e713-4f7e-8d4b-3a90ea258faf"),
+	"user" : "root",
+	"db" : "admin",
+	"roles" : [
+		{
+			"role" : "root",
+			"db" : "admin"
+		}
+	],
+	"mechanisms" : [
+		"SCRAM-SHA-1",
+		"SCRAM-SHA-256"
+	]
+}
+
+rs0:PRIMARY> use newdb
+switched to db newdb
+
+rs0:PRIMARY> db.movie.find().pretty()
+{ "_id" : ObjectId("5e3169dc33a1f520c879584a"), "name" : "batman" }
+
+
+> exit
+bye
+```
 
 ## WipeOut DormantDatabase
 
-You can wipe out a DormantDatabase while deleting the object by setting `spec.wipeOut` to true. KubeDB operator will delete any relevant resources of this `MongoDB` database (i.e, PVCs, Secrets, Snapshots). It will also delete snapshot data stored in the Cloud Storage buckets.
-
-```yaml
-$ kubedb edit drmn -n demo mgo-replicaset
-apiVersion: kubedb.com/v1alpha1
-kind: DormantDatabase
-metadata:
-  name: mgo-replicaset
-  namespace: demo
-  ...
-spec:
-  wipeOut: true
-  ...
-status:
-  phase: Paused
-  ...
-```
-
-If `spec.wipeOut` is not set to true while deleting the `dormantdatabase` object, then only this object will be deleted and `kubedb-operator` won't delete related Secrets, PVCs, and Snapshots. So, users still can access the stored data in the cloud storage buckets as well as PVCs.
-
-## Delete DormantDatabase
-
-As it is already discussed above, `DormantDatabase` can be deleted with or without wiping out the resources. To delete the `dormantdatabase`,
+You can wipe out the database while deleting the object by setting `spec.terminationPolicy` to `WipeOut`. KubeDB operator will delete any relevant resources of this `MongoDB` database (i.e, PVCs, Secrets, Rbac resources, Statefulsets, stash backup data). It will also delete stash backup data stored in the Cloud Storage buckets.
 
 ```console
-$ kubectl delete drmn mgo-replicaset -n demo
-dormantdatabase "mgo-replicaset" deleted
+$ kubectl patch -n demo mg/mgo-replicaset -p '{"spec":{"terminationPolicy":"WipeOut"}}' --type="merge"
+mongodb.kubedb.com/mgo-replicaset patched
+
+$ kubectl delete -n demo mg/mgo-replicaset
+mongodb.kubedb.com "mgo-replicaset" deleted
 ```
 
 ## Cleaning up
@@ -569,9 +616,6 @@ To cleanup the Kubernetes resources created by this tutorial, run:
 ```console
 kubectl patch -n demo mg/mgo-replicaset -p '{"spec":{"terminationPolicy":"WipeOut"}}' --type="merge"
 kubectl delete -n demo mg/mgo-replicaset
-
-kubectl patch -n demo drmn/mgo-replicaset -p '{"spec":{"wipeOut":true}}' --type="merge"
-kubectl delete -n demo drmn/mgo-replicaset
 
 kubectl delete ns demo
 ```

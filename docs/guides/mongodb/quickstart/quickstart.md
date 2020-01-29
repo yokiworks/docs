@@ -423,12 +423,65 @@ $ kubectl patch -n demo mg/mgo-quickstart -p '{"spec":{"terminationPolicy":"Halt
 mongodb.kubedb.com/mgo-quickstart patched
 ```
 
+Set `spec.halted` to `true`.
+
+```console
+$ kubectl patch -n demo mg/mgo-quickstart -p '{"spec":{"halted":true}}' --type="merge"
+mongodb.kubedb.com/mgo-quickstart patched
+```
+
 Database status will be set to `Halted` after successful deletion of kubernetes resources.
 
 ```console
 $ kubectl get mongodb -n demo
 NAME             VERSION   STATUS   AGE
 mgo-quickstart   4.1       Halted   30m
+```
+
+```console
+$ kubedb describe mg -n demo mgo-quickstart
+Name:               mgo-quickstart
+Namespace:          demo
+CreationTimestamp:  Wed, 29 Jan 2020 17:34:14 +0600
+Labels:             <none>
+Annotations:        <none>
+Replicas:           1  total
+Status:             Halted
+  StorageType:      Durable
+Volume:
+  StorageClass:  standard
+  Capacity:      1Gi
+  Access Modes:  RWO
+
+Database Secret:
+  Name:         mgo-quickstart-auth
+  Labels:         app.kubernetes.io/component=database
+                  app.kubernetes.io/instance=mgo-quickstart
+                  app.kubernetes.io/managed-by=kubedb.com
+                  app.kubernetes.io/name=mongodb
+                  app.kubernetes.io/version=4.1
+                  kubedb.com/kind=MongoDB
+                  kubedb.com/name=mgo-quickstart
+  Annotations:  <none>
+  
+Type:  Opaque
+  
+Data
+====
+  password:  16 bytes
+  username:  4 bytes
+
+Events:
+  Type    Reason      Age   From              Message
+  ----    ------      ----  ----              -------
+  Normal  Successful  56s   MongoDB operator  Successfully created stats service
+  Normal  Successful  56s   MongoDB operator  Successfully created Service
+  Normal  Successful  37s   MongoDB operator  Successfully created StatefulSet demo/mgo-quickstart
+  Normal  Successful  37s   MongoDB operator  Successfully created MongoDB
+  Normal  Successful  36s   MongoDB operator  Successfully created appbinding
+  Normal  Successful  36s   MongoDB operator  Successfully patched stats service
+  Normal  Successful  35s   MongoDB operator  Successfully patched StatefulSet demo/mgo-quickstart
+  Normal  Successful  35s   MongoDB operator  Successfully patched MongoDB
 ```
 
 ## Resume Database
