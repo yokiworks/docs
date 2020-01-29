@@ -435,7 +435,7 @@ To pause the database, we have to set `spec.terminationPolicy:` to `Pause` by up
 ```console
 $ kubectl edit es -n demo quick-elasticsearch
 spec:
-  terminationPolicy: Pause
+  terminationPolicy: Halt
 ```
 
 Now, if you delete the Elasticsearch object, KubeDB operator will create a matching DormantDatabase object. KubeDB operator watches for DormantDatabase objects and it will take necessary steps when a DormantDatabase object is created.
@@ -510,7 +510,7 @@ spec:
               storage: 1Gi
           storageClassName: standard
         storageType: Durable
-        terminationPolicy: Pause
+        terminationPolicy: Halt
         updateStrategy:
           type: RollingUpdate
         version: 7.3.2

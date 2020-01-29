@@ -171,7 +171,7 @@ spec:
     spec: {}
   strategy:
     type: RollingUpdate
-  terminationPolicy: Pause
+  terminationPolicy: Halt
   version: 1.5.4-v1
 status:
   observedGeneration: 1$4210395375389091791
@@ -291,7 +291,7 @@ spec:
           spec: {}
         strategy:
           type: RollingUpdate
-        terminationPolicy: Pause
+        terminationPolicy: Halt
         version: 1.5.4-v1
 status:
   observedGeneration: 1$7678503742307285743

@@ -81,7 +81,7 @@ metadata:
   name: mgo-scheduled
   namespace: demo
 spec:
-  version: "3.4-v3"
+  version: "4.1"
   storage:
     storageClassName: "standard"
     accessModes:
@@ -157,7 +157,7 @@ spec:
       requests:
         storage: 1Gi
     storageClassName: standard
-  version: 3.4-v3
+  version: "4.1"
 status:
   creationTime: 2018-02-02T10:46:18Z
   phase: Running
@@ -180,7 +180,7 @@ metadata:
   name: mgo-scheduled
   namespace: demo
 spec:
-  version: "3.4-v3"
+  version: "4.1"
   storage:
     storageClassName: "standard"
     accessModes:
@@ -213,7 +213,7 @@ metadata:
   name: mgo-scheduled
   namespace: demo
 spec:
-  version: "3.4-v3"
+  version: "4.1"
   storage:
     storageClassName: "standard"
     accessModes:
@@ -248,7 +248,7 @@ metadata:
   name: mgo-scheduled
   namespace: demo
 spec:
-  version: "3.4-v3"
+  version: "4.1"
   storage:
     storageClassName: "standard"
     accessModes:
@@ -280,7 +280,7 @@ metadata:
   name: mgo-scheduled
   namespace: demo
 spec:
-  version: "3.4-v3"
+  version: "4.1"
   storage:
     storageClassName: "standard"
     accessModes:

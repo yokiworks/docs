@@ -17,7 +17,7 @@ section_menu_id: guides
 This tutorial will show you how to use KubeDB to run a MongoDB database.
 
 <p align="center">
-  <img alt="lifecycle"  src="/docs/images/mongodb/mgo-lifecycle.png">
+  <img alt="lifecycle"  src="/docs/images/mongodb/mgo-lifecycle.svg">
 </p>
 
 ## Before You Begin
@@ -49,21 +49,35 @@ When you have installed KubeDB, it has created `MongoDBVersion` crd for all supp
 
 ```console
 $ kubectl get mongodbversions
-NAME       VERSION   DB_IMAGE                    DEPRECATED   AGE
-3.4        3.4       maruftuhin/mongo:3.4        true         5h41m
-3.4-v1     3.4       maruftuhin/mongo:3.4-v1     true         5h41m
-3.4-v2     3.4       maruftuhin/mongo:3.4-v2     true         5h41m
-3.4-v3     3.4       maruftuhin/mongo:3.4-v3                  5h41m
-3.6        3.6       maruftuhin/mongo:3.6        true         5h41m
-3.6-v1     3.6       maruftuhin/mongo:3.6-v1     true         5h41m
-3.6-v2     3.6       maruftuhin/mongo:3.6-v2     true         5h41m
-3.6-v3     3.6       maruftuhin/mongo:3.6-v3                  5h41m
-4.0        4.0.5     maruftuhin/mongo:4.0        true         5h41m
-4.0-v1     4.0.5     maruftuhin/mongo:4.0-v1                  5h41m
-4.0.5      4.0.5     maruftuhin/mongo:4.0.5      true         5h41m
-4.0.5-v1   4.0.5     maruftuhin/mongo:4.0.5-v1                5h41m
-4.1.7      4.1.7     maruftuhin/mongo:4.1.7      true         5h41m
-4.1.7-v1   4.1.7     maruftuhin/mongo:4.1.7-v1                5h41m
+NAME       VERSION   DB_IMAGE                DEPRECATED   AGE
+3.4        3.4       kubedb/mongo:3.4        true         76m
+3.4-v1     3.4       kubedb/mongo:3.4-v1     true         76m
+3.4-v2     3.4       kubedb/mongo:3.4-v2     true         76m
+3.4-v3     3.4       kubedb/mongo:3.4-v3                  76m
+3.4-v4     3.4.22    kubedb/mongo:3.4-v4                  76m
+3.4.17     3.4.17    kubedb/mongo:3.4.17                  76m
+3.4.22     3.4.22    kubedb/mongo:3.4.22                  76m
+3.6        3.6       kubedb/mongo:3.6        true         76m
+3.6-v1     3.6       kubedb/mongo:3.6-v1     true         76m
+3.6-v2     3.6       kubedb/mongo:3.6-v2     true         76m
+3.6-v3     3.6       kubedb/mongo:3.6-v3                  76m
+3.6-v4     3.6.13    kubedb/mongo:3.6-v4                  76m
+3.6.13     3.6.13    kubedb/mongo:3.6.13                  76m
+3.6.8      3.6.8     kubedb/mongo:3.6.8                   76m
+4.0        4.0.5     kubedb/mongo:4.0        true         76m
+4.0-v1     4.0.5     kubedb/mongo:4.0-v1                  76m
+4.0-v2     4.0.11    kubedb/mongo:4.0-v2                  76m
+4.0.11     4.0.11    kubedb/mongo:4.0.11                  76m
+4.0.3      4.0.3     kubedb/mongo:4.0.3                   76m
+4.0.5      4.0.5     kubedb/mongo:4.0.5      true         76m
+4.0.5-v1   4.0.5     kubedb/mongo:4.0.5-v1                76m
+4.0.5-v2   4.0.5     kubedb/mongo:4.0.5-v2                76m
+4.1        4.1.13    kubedb/mongo:4.1                     76m
+4.1.13     4.1.13    kubedb/mongo:4.1.13                  76m
+4.1.4      4.1.4     kubedb/mongo:4.1.4                   76m
+4.1.7      4.1.7     kubedb/mongo:4.1.7      true         76m
+4.1.7-v1   4.1.7     kubedb/mongo:4.1.7-v1                76m
+4.1.7-v2   4.1.7     kubedb/mongo:4.1.7-v2                76m
 ```
 
 ## Create a MongoDB database
@@ -77,7 +91,7 @@ metadata:
   name: mgo-quickstart
   namespace: demo
 spec:
-  version: "3.4-v3"
+  version: "4.1"
   storageType: Durable
   storage:
     storageClassName: "standard"
@@ -259,7 +273,7 @@ spec:
   terminationPolicy: DoNotTerminate
   updateStrategy:
     type: RollingUpdate
-  version: 3.4-v3
+  version: "4.1"
 status:
   observedGeneration: 2$4213139756412538772
   phase: Running
@@ -414,10 +428,10 @@ spec:
               storage: 1Gi
           storageClassName: standard
         storageType: Durable
-        terminationPolicy: Pause
+        terminationPolicy: Halt
         updateStrategy:
           type: RollingUpdate
-        version: 3.4-v3
+        version: "4.1"
 status:
   observedGeneration: 1$16440556888999634490
   pausingTime: "2019-04-30T09:57:44Z"
@@ -482,9 +496,6 @@ To cleanup the Kubernetes resources created by this tutorial, run:
 ```console
 kubectl patch -n demo mg/mgo-quickstart -p '{"spec":{"terminationPolicy":"WipeOut"}}' --type="merge"
 kubectl delete -n demo mg/mgo-quickstart
-
-kubectl patch -n demo drmn/mgo-quickstart -p '{"spec":{"wipeOut":true}}' --type="merge"
-kubectl delete -n demo drmn/mgo-quickstart
 
 kubectl delete ns demo
 ```

@@ -29,7 +29,7 @@ metadata:
   name: mgo1
   namespace: demo
 spec:
-  version: "3.4-v3"
+  version: "4.1"
   replicas: 3
   databaseSecret:
     secretName: mgo1-auth
@@ -126,7 +126,7 @@ spec:
         - name: http
           port: 9200
           targetPort: http
-  terminationPolicy: Pause
+  terminationPolicy: Halt
   updateStrategy:
     type: RollingUpdate
 ```
@@ -342,7 +342,7 @@ kind: MongoDB
 metadata:
   name: mgo1
 spec:
-  version: 3.4-v2
+  version: "4.1"
   init:
     scriptSource:
       configMap:
@@ -364,7 +364,7 @@ kind: MongoDB
 metadata:
   name: mgo1
 spec:
-  version: 3.4-v2
+  version: "4.1"
   init:
     snapshotSource:
       name: "snapshot-xyz"

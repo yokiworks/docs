@@ -394,7 +394,7 @@ spec:
               storage: 50Mi
           storageClassName: standard
         storageType: Durable
-        terminationPolicy: Pause
+        terminationPolicy: Halt
         updateStrategy:
           type: RollingUpdate
         version: "5.7"

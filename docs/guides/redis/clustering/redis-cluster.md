@@ -61,7 +61,7 @@ spec:
     storageClassName: "standard"
     accessModes:
     - ReadWriteOnce
-  terminationPolicy: Pause
+  terminationPolicy: Halt
   updateStrategy:
     type: RollingUpdate
 ```
@@ -224,7 +224,7 @@ spec:
         storage: 1Gi
     storageClassName: standard
   storageType: Durable
-  terminationPolicy: Pause
+  terminationPolicy: Halt
   updateStrategy:
     type: RollingUpdate
   version: 4.0-v2

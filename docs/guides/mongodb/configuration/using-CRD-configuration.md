@@ -70,7 +70,7 @@ metadata:
   name: mgo-misc-config
   namespace: demo
 spec:
-  version: "3.6-v3"
+  version: "4.1"
   storageType: "Durable"
   storage:
     storageClassName: "standard"
@@ -87,7 +87,7 @@ spec:
         requests:
           memory: "1Gi"
           cpu: "250m"
-  terminationPolicy: Pause
+  terminationPolicy: Halt
   updateStrategy:
     type: RollingUpdate
 ```

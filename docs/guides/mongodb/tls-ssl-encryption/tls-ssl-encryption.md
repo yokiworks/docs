@@ -310,7 +310,7 @@ metadata:
   name: mongo-sh-tls
   namespace: demo
 spec:
-  version: 3.6-v4
+  version: "3.6-v4"
   sslMode: requireSSL
   clusterAuthMode: x509
   shardTopology:

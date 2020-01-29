@@ -22,9 +22,9 @@ aliases:
 | Clustering - Sharding                        |   &#10003;   |
 | Clustering - Replication                     |   &#10003;   |
 | Persistent Volume                            |   &#10003;   |
-| Instant Backup                               |   &#10003;   |
-| Scheduled Backup                             |   &#10003;   |
-| Initialize using Snapshot                    |   &#10003;   |
+| Instant Backup (Stash Integration)           |   &#10003;   |
+| Scheduled Backup (Stash Integration)         |   &#10003;   |
+| Initialize using Backup (Stash Integration)  |   &#10003;   |
 | Initialize using Script (\*.js and/or \*.sh) |   &#10003;   |
 | Custom Configuration                         |   &#10003;   |
 | Using Custom docker image                    |   &#10003;   |
@@ -34,7 +34,7 @@ aliases:
 ## Life Cycle of a MongoDB Object
 
 <p align="center">
-  <img alt="lifecycle"  src="/docs/images/mongodb/mgo-lifecycle.png">
+  <img alt="lifecycle"  src="/docs/images/mongodb/mgo-lifecycle.svg">
 </p>
 
 ## Supported MongoDB Versions

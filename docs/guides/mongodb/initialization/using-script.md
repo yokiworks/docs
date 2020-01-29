@@ -60,7 +60,7 @@ metadata:
   name: mgo-init-script
   namespace: demo
 spec:
-  version: "3.4-v3"
+  version: "4.1"
   storage:
     storageClassName: "standard"
     accessModes:
@@ -236,10 +236,10 @@ spec:
         storage: 1Gi
     storageClassName: standard
   storageType: Durable
-  terminationPolicy: Pause
+  terminationPolicy: Halt
   updateStrategy:
     type: RollingUpdate
-  version: 3.4-v3
+  version: "4.1"
 status:
   observedGeneration: 2$4213139756412538772
   phase: Running

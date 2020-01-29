@@ -48,7 +48,7 @@ metadata:
   name: mongo-sh
   namespace: demo
 spec:
-  version: 3.6-v3
+  version: "4.1"
   shardTopology:
     configServer:
       replicas: 3
@@ -310,10 +310,10 @@ spec:
             storage: 1Gi
         storageClassName: standard
   storageType: Durable
-  terminationPolicy: Pause
+  terminationPolicy: Halt
   updateStrategy:
     type: RollingUpdate
-  version: 3.6-v3
+  version: "4.1"
 status:
   observedGeneration: 3$4212299729528774793
   phase: Running
@@ -969,10 +969,10 @@ spec:
                   storage: 1Gi
               storageClassName: standard
         storageType: Durable
-        terminationPolicy: Pause
+        terminationPolicy: Halt
         updateStrategy:
           type: RollingUpdate
-        version: 3.6-v3
+        version: "4.1"
 status:
   observedGeneration: 1$16440556888999634490
   pausingTime: "2019-04-29T11:24:41Z"

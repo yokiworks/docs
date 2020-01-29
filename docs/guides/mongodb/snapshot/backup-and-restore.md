@@ -242,7 +242,7 @@ metadata:
   name: mgo-recovered
   namespace: demo
 spec:
-  version: "3.4-v3"
+  version: "4.1"
   storage:
     storageClassName: "standard"
     accessModes:

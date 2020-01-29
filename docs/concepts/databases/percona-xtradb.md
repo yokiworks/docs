@@ -82,7 +82,7 @@ spec:
       - name:  http
         port:  9200
         targetPort: http
-  terminationPolicy: Pause
+  terminationPolicy: Halt
   updateStrategy:
     type: RollingUpdate
 ```

@@ -349,7 +349,7 @@ To pause the database, we have to set `spec.terminationPolicy:` to `Pause` by up
 ```console
 $ kubectl edit pg -n demo quick-postgres
 spec:
-  terminationPolicy: Pause
+  terminationPolicy: Halt
 ```
 
 Now, if you delete the Postgres object, KubeDB operator will create a matching DormantDatabase object. This DormantDatabase object can be used to resume the database. KubeDB operator will delete the StatefulSet and its Pods but leaves the Secret, PVCs unchanged.
@@ -421,7 +421,7 @@ spec:
               storage: 1Gi
           storageClassName: standard
         storageType: Durable
-        terminationPolicy: Pause
+        terminationPolicy: Halt
         updateStrategy:
           type: RollingUpdate
         version: 10.2-v5
