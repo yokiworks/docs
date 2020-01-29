@@ -17,7 +17,7 @@ section_menu_id: guides
 This tutorial will show you how to use KubeDB to run a MongoDB database.
 
 <p align="center">
-  <img alt="lifecycle"  src="/docs/images/mongodb/mgo-lifecycle.svg">
+  <img alt="lifecycle"  src="/docs/images/mongodb/mgo-lifecycle.png">
 </p>
 
 ## Before You Begin
