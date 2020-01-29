@@ -103,7 +103,7 @@ spec:
 ```
 
 ```console
-$ kubectl create -f https://github.com/kubedb/docs/raw/{{< param "info.version" >}}/docs/examples/mongodb/configuration/demo-1.yaml
+$ kubectl create -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/mongodb/configuration/demo-1.yaml
 mongodb.kubedb.com/mgo-custom-config created
 ```
 

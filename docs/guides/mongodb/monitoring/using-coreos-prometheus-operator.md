@@ -125,7 +125,7 @@ Here,
 Let's create the MongoDB object that we have shown above,
 
 ```console
-$ kubectl create -f https://github.com/kubedb/docs/raw/{{< param "info.version" >}}/docs/examples/mongodb/monitoring/coreos-prom-mgo.yaml
+$ kubectl create -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/mongodb/monitoring/coreos-prom-mgo.yaml
 mongodb.kubedb.com/coreos-prom-mgo created
 ```
 

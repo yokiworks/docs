@@ -69,7 +69,7 @@ Here,
 Let's create the MongoDB crd we have shown above.
 
 ```console
-$ kubectl apply -f https://github.com/kubedb/docs/raw/{{< param "info.version" >}}/docs/examples/mongodb/monitoring/builtin-prom-mgo.yaml
+$ kubectl apply -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/mongodb/monitoring/builtin-prom-mgo.yaml
 mongodb.kubedb.com/builtin-prom-mgo created
 ```
 
@@ -275,7 +275,7 @@ data:
 Let's create above `ConfigMap`,
 
 ```console
-$ kubectl apply -f https://github.com/kubedb/docs/raw/{{< param "info.version" >}}/docs/examples/monitoring/builtin-prometheus/prom-config.yaml
+$ kubectl apply -f https://github.com/kubedb/docs/raw/del-dorm/docs/examples/monitoring/builtin-prometheus/prom-config.yaml
 configmap/prometheus-config created
 ```
 
