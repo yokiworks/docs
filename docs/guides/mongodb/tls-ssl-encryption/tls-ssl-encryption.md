@@ -81,7 +81,7 @@ Now, wait until `mgo-tls created` has status `Running`. i.e,
 ```console
 $ kubectl get mg -n demo
 NAME      VERSION   STATUS    AGE
-mgo-tls   4.1    Running   20s
+mgo-tls   4.1       Running   28s
 ```
 
 ### Verify TLS/SSL in MongoDB Standalone
@@ -107,20 +107,20 @@ Data
 ====
 ca.cert:     1058 bytes
 ca.key:      1679 bytes
-client.pem:  2859 bytes
+client.pem:  2855 bytes
 key.txt:     1008 bytes
-mongo.pem:   2863 bytes
+mongo.pem:   2859 bytes
 ```
 
 ```console
 $ kubectl exec -it mgo-tls-0 -n demo bash
-mongodb@mgo-tls-0: # you are into container
+mongodb@mgo-tls-0: # you are inside container
 
 mongodb@mgo-tls-0:/$ ls /data/configdb/
 ca.cert  ca.key  client.pem  key.txt  mongo.pem  mongod.conf
 
 mongodb@mgo-tls-0:/$ openssl x509 -in /data/configdb/client.pem -inform PEM -subject -nameopt RFC2253 -noout
-subject= CN=root,O=kubedb:client
+subject=CN=root,O=kubedb:client
 
 # Now use CN=root,O=kubedb:client as root 
 mongodb@mgo-tls-0:/$ mongo --ssl --sslCAFile /data/configdb/ca.cert --sslPEMKeyFile /data/configdb/client.pem admin --host localhost --authenticationMechanism MONGODB-X509 --authenticationDatabase='$external' -u "CN=root,O=kubedb:client"
