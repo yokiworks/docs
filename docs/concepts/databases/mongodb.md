@@ -29,7 +29,7 @@ metadata:
   name: mgo1
   namespace: demo
 spec:
-  version: "3.4-v3"
+  version: "3.4-v4"
   replicas: 3
   databaseSecret:
     secretName: mgo1-auth
@@ -63,6 +63,14 @@ spec:
             storage: 1Gi
         storageClassName: standard
   sslMode: preferSSL
+  tls:
+    issuerRef:
+      name: mongo-ca-issuer
+      kind: Issuer
+      apiGroup: "cert-manager.io"
+    certificate:
+      organization:
+        - kubedb
   clusterAuthMode: x509
   storageType: "Durable"
   storage:
@@ -135,10 +143,14 @@ spec:
 
 `spec.version` is a required field specifying the name of the [MongoDBVersion](/docs/concepts/catalog/mongodb.md) crd where the docker images are specified. Currently, when you install KubeDB, it creates the following `MongoDBVersion` resources,
 
-- `3.4-v4`, `3.4-v3`, `3.4-v2`, `3.4-v1`, `3.4`
-- `3.6-v4`, `3.6-v3`, `3.6-v2`, `3.6-v1`, `3.6`
-- `4.0.5-v2`, `4.0.5-v1`, `4.0-v1`, `4.0.5`, `4.0`
-- `4.1.7-v2`, `4.1.7-v1`, `4.1.7`
+- `3.4-v5`, `3.4-v4`, `3.4-v3`, `3.4-v2`, `3.4-v1`, `3.4`
+- `3.6-v5`, `3.6-v4`, `3.6-v3`, `3.6-v2`, `3.6-v1`, `3.6`
+- `4.0.5-v3`, `4.0.5-v2`, `4.0.5-v1`, `4.0-v1`, `4.0.5`, `4.0`
+- `4.1.4-v1`, `4.1.4`
+- `4.1.7-v3`, `4.1.7-v2`, `4.1.7-v1`, `4.1.7`
+- `4.1.13-v1`, `4.1.13` 
+- `4.2`,
+- `4.2.3`,
 
 ### spec.replicas
 
@@ -181,6 +193,7 @@ type: Opaque
 Secrets provided by users are not managed by KubeDB, and therefore, won't be modified or garbage collected by the KubeDB operator (version 0.13.0 and higher).
 
 ### spec.certificateSecret
+//TODO: All I know is this field has been substantially changed
 
 `spec.certificateSecret` (optional) is a secret name that contains keyfile (a random string) against `key.txt` key. Each mongod instance in the replica set and `shardTopology` uses the contents of the keyfile as the shared password for authenticating other members in the `replicaset`. Only `mongod` instances with the correct keyfile can join the replica set. _User can provide the `certificateSecret` by creating a secret with key `key.txt`. See [here](https://docs.mongodb.com/manual/tutorial/enforce-keyfile-access-control-in-existing-replica-set/#create-a-keyfile) to create the string for `certificateSecret`._ If `certificateSecret` is not given, KubeDB operator will generate a `certificateSecret` itself.
 
@@ -292,6 +305,29 @@ Enables TLS/SSL or mixed TLS/SSL used for all network connections. The value of 
 | `preferSSL`  | Connections between servers use TLS/SSL. For incoming connections, the server accepts both TLS/SSL and non-TLS/non-SSL. |
 | `requireSSL` | The server uses and accepts only TLS/SSL encrypted connections. |
 
+### spec.tls:
+`spec.tls` represents configurations for certificates used in TLS/SSL or mixed TLS/SSL used for all network connections of mongodb.
+
+Available configurable fields:
+
+- `issuerRef` is a reference to the `Issuer` or `ClusterIssuer` that will be used by KubeDB to generate necessary certificates.
+- `certificate` (optional) is used to configure the certificates.
+
+`spec.tls.issuerRef` has the following fields:
+
+- `apiGroup` is the group name of the resource being referenced. The value for `Issuer` or `ClusterIssuer` is "cert-manager.io" (cert-manager v0.12.0 and later).
+- `kind` is the type of resource being referenced. KubeDB supports both of `Issuer` and `ClusterIssuer` as values fro this field.
+- `name` is the name of resource (`Issuer` or `ClusterIssuer`) being referenced.
+
+`spec.tls.certificate` has the following fields:
+
+- `organization` (optional) is the organization to be used on the Certificate.
+- `duration` (optional) is the time period during which the certificate is valid.
+- `renewBefore` (optional) is a specifiable time before expiration duration.
+- `dnsNames` (optional) is a list of subject alt names to be used in the Certificate..
+- `ipAddresses` (optional) is a list of IP addresses to be used in the Certificate.
+- `uriSANs` (optional) is a list of URI Subject Alternative Names to be set in the Certificate.
+	
 ### spec.clusterAuthMode
 
 The authentication mode used for cluster authentication. This option can have one of the following values:
